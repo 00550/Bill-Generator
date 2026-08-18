@@ -1,0 +1,289 @@
+
+/* ========================================
+   RESET
+======================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* ========================================
+   BODY
+======================================== */
+
+body {
+    min-height: 100vh;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    background: #f5f7fb;
+
+    color: #1f2937;
+}
+
+
+/* ========================================
+   HEADER
+======================================== */
+
+header {
+    background: #1f2937;
+
+    color: white;
+
+    padding: 20px 30px;
+
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+header h1 {
+    font-size: 25px;
+}
+
+
+/* ========================================
+   CONTAINER
+======================================== */
+
+.container {
+    width: 100%;
+
+    max-width: 720px;
+
+    margin: 35px auto;
+
+    padding: 0 20px;
+}
+
+
+/* ========================================
+   CARD
+======================================== */
+
+.card {
+    background: white;
+
+    padding: 28px;
+
+    margin-bottom: 20px;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 3px 12px rgba(0, 0, 0, 0.08);
+}
+
+
+/* ========================================
+   HEADINGS
+======================================== */
+
+.card h2 {
+    font-size: 25px;
+
+    margin-bottom: 25px;
+
+    color: #111827;
+}
+
+.card h3 {
+    font-size: 18px;
+
+    margin-bottom: 20px;
+
+    padding-bottom: 10px;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    color: #374151;
+}
+
+
+/* ========================================
+   LABEL
+======================================== */
+
+label {
+    display: block;
+
+    margin-top: 16px;
+    margin-bottom: 7px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    color: #374151;
+}
+
+
+/* ========================================
+   INPUT
+======================================== */
+
+input {
+    width: 100%;
+
+    padding: 12px 13px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 7px;
+
+    font-size: 15px;
+
+    background: #fff;
+
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
+}
+
+input:focus {
+    outline: none;
+
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+input::placeholder {
+    color: #9ca3af;
+}
+
+
+/* ========================================
+   HELP TEXT
+======================================== */
+
+.help-text {
+    margin-top: 10px;
+
+    color: #6b7280;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+
+/* ========================================
+   ACTIONS
+======================================== */
+
+.actions {
+    display: flex;
+
+    gap: 10px;
+
+    margin-top: 5px;
+}
+
+
+/* ========================================
+   BUTTON
+======================================== */
+
+button {
+    padding: 12px 22px;
+
+    border: none;
+
+    border-radius: 7px;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.15s,
+        opacity 0.15s;
+}
+
+button:hover {
+    opacity: 0.9;
+
+    transform: translateY(-1px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+
+/* ========================================
+   SAVE BUTTON
+======================================== */
+
+.save {
+    background: #16a34a;
+
+    color: white;
+}
+
+
+/* ========================================
+   BACK BUTTON
+======================================== */
+
+.back {
+    background: #6b7280;
+
+    color: white;
+}
+
+
+/* ========================================
+   MESSAGE
+======================================== */
+
+#message {
+    margin-top: 18px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    min-height: 20px;
+}
+
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width: 600px) {
+
+    .container {
+        margin-top: 20px;
+
+        padding: 0 12px;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+    .card h2 {
+        font-size: 21px;
+    }
+
+    .actions {
+        flex-direction: column;
+    }
+
+    button {
+        width: 100%;
+    }
+
+}

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Shop - Billing Desk</title>
+
+</head>
+
+<body>
+
+    <h1>Billing Desk</h1>
+
+    <h2>Edit Shop</h2>
+
+
+    <form id="editShopForm">
+
+        <label>
+            Shop Name
+        </label>
+
+        <br>
+
+        <input
+            type="text"
+            id="shopName"
+            required
+        >
+
+        <br><br>
+
+
+        <label>
+            Shop Address
+        </label>
+
+        <br>
+
+        <textarea
+            id="shopAddress"
+            required
+        ></textarea>
+
+        <br><br>
+
+
+        <label>
+            Phone
+        </label>
+
+        <br>
+
+        <input
+            type="text"
+            id="phone"
+        >
+
+        <br><br>
+
+
+        <label>
+            Email
+        </label>
+
+        <br>
+
+        <input
+            type="email"
+            id="email"
+        >
+
+        <br><br>
+
+
+        <label>
+            GST Number
+        </label>
+
+        <br>
+
+        <input
+            type="text"
+            id="gstNumber"
+        >
+
+        <br><br>
+
+
+        <label>
+            Status
+        </label>
+
+        <br>
+
+        <select id="status">
+
+            <option value="active">
+                Active
+            </option>
+
+            <option value="inactive">
+                Inactive
+            </option>
+
+        </select>
+
+        <br><br>
+
+
+        <button type="submit">
+            Update Shop
+        </button>
+
+
+        <button
+            type="button"
+            onclick="goBack()"
+        >
+            Cancel
+        </button>
+
+
+    </form>
+
+
+    <p id="message"></p>
+
+
+    <script src="edit-shop.js"></script>
+
+</body>
+
+</html>

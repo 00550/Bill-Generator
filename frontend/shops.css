@@ -1,0 +1,281 @@
+/* ========================================
+   RESET
+======================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* ========================================
+   BODY
+======================================== */
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f5f6fa;
+    color: #1f2937;
+    min-height: 100vh;
+    padding: 35px 40px;
+}
+
+
+/* ========================================
+   PAGE HEADER
+======================================== */
+
+h1 {
+    font-size: 34px;
+    color: #1f2937;
+    margin-bottom: 5px;
+}
+
+h2 {
+    font-size: 22px;
+    color: #6b7280;
+    margin-bottom: 25px;
+}
+
+
+/* ========================================
+   TOP BUTTONS
+======================================== */
+
+button {
+    padding: 11px 20px;
+    margin: 5px 8px 5px 0;
+    border: none;
+    border-radius: 7px;
+    background: #2563eb;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+button:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: scale(0.97);
+}
+
+
+/* ========================================
+   MESSAGE
+======================================== */
+
+#message {
+    margin-top: 20px;
+    padding: 12px 15px;
+    border-radius: 7px;
+    font-weight: 600;
+    color: #b91c1c;
+}
+
+
+/* ========================================
+   SHOPS CONTAINER
+======================================== */
+
+#shopsContainer {
+    margin-top: 25px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+}
+
+
+/* ========================================
+   SHOP CARD
+======================================== */
+
+.shop-card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.25s ease;
+}
+
+.shop-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+
+/* ========================================
+   SHOP TITLE
+======================================== */
+
+#shopsContainer h3 {
+    font-size: 21px;
+    color: #1f2937;
+    margin-bottom: 18px;
+}
+
+
+/* ========================================
+   SHOP INFORMATION
+======================================== */
+
+#shopsContainer p {
+    margin: 10px 0;
+    color: #4b5563;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+#shopsContainer strong {
+    color: #1f2937;
+}
+
+
+/* ========================================
+   SHOP STATUS
+======================================== */
+
+#shopsContainer p:last-of-type {
+    font-weight: 600;
+}
+
+
+/* ========================================
+   SHOP BUTTONS
+======================================== */
+
+#shopsContainer button {
+    margin-top: 15px;
+    margin-right: 8px;
+}
+
+
+/* OPEN SHOP */
+
+#shopsContainer button:first-of-type {
+    background: #16a34a;
+}
+
+#shopsContainer button:first-of-type:hover {
+    background: #15803d;
+}
+
+
+/* EDIT */
+
+#shopsContainer button:last-of-type {
+    background: #f59e0b;
+}
+
+#shopsContainer button:last-of-type:hover {
+    background: #d97706;
+}
+
+
+/* ========================================
+   REMOVE HR
+======================================== */
+
+#shopsContainer hr {
+    display: none;
+}
+
+
+/* ========================================
+   EMPTY SHOP MESSAGE
+======================================== */
+
+#shopsContainer > p {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+    color: #6b7280;
+}
+
+
+/* ========================================
+   EMPTY SHOP BUTTON
+======================================== */
+
+#shopsContainer > button {
+    background: #2563eb;
+}
+
+
+/* ========================================
+   LOADING
+======================================== */
+
+#shopsContainer:empty {
+    display: block;
+}
+
+
+/* ========================================
+   RESPONSIVE DESIGN
+======================================== */
+
+@media (max-width: 700px) {
+
+    body {
+        padding: 25px 20px;
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    body > button {
+        width: 100%;
+        margin: 5px 0;
+    }
+
+    #shopsContainer {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .shop-card {
+        padding: 20px;
+    }
+
+    #shopsContainer button {
+        width: 100%;
+        margin: 6px 0;
+    }
+}
+
+
+/* ========================================
+   SMALL MOBILE
+======================================== */
+
+@media (max-width: 400px) {
+
+    body {
+        padding: 20px 15px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    .shop-card {
+        padding: 18px;
+    }
+}

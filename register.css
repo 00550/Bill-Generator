@@ -1,0 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 10% 20%, #1e1b4b 0%, #0f172a 90%);
+    padding: 24px;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Subtle background glow effect */
+body::before {
+    content: '';
+    position: absolute;
+    width: 320px;
+    height: 320px;
+    background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.25;
+    z-index: 0;
+    top: 15%;
+    transform: translateY(-50%);
+}
+
+/* Titles */
+h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, #ffffff 40%, #94a3b8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 6px;
+    position: relative;
+    z-index: 1;
+}
+
+h2 {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #94a3b8;
+    margin-bottom: 28px;
+    letter-spacing: 0.02em;
+    position: relative;
+    z-index: 1;
+}
+
+/* Card Container */
+#registerForm {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 420px;
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 36px 30px;
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Hide manual breaks */
+#registerForm br {
+    display: none;
+}
+
+/* Input Fields */
+#registerForm input {
+    width: 100%;
+    padding: 14px 18px;
+    margin-bottom: 18px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #ffffff;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    outline: none;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#registerForm input::placeholder {
+    color: #64748b;
+    font-weight: 400;
+}
+
+#registerForm input:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(15, 23, 42, 0.8);
+}
+
+#registerForm input:focus {
+    background: rgba(15, 23, 42, 0.95);
+    border-color: #6366f1;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.18),
+                0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Submit Button */
+#registerForm button {
+    width: 100%;
+    margin-top: 6px;
+    padding: 14px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#registerForm button:hover {
+    background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+    box-shadow: 0 6px 20px rgba(79, 70, 229, 0.6);
+    transform: translateY(-1px);
+}
+
+#registerForm button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+}
+
+/* Feedback message */
+#message {
+    position: relative;
+    z-index: 1;
+    margin-top: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #cbd5e1;
+    text-align: center;
+    min-height: 20px;
+    max-width: 400px;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}

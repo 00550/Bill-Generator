@@ -1,0 +1,1000 @@
+
+/* ==================================================
+   BILLING DESK - FRONT PAGE
+   CSS
+================================================== */
+
+
+/* ================= RESET ================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+html {
+    scroll-behavior: smooth;
+}
+
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+
+    background: #f7f9fc;
+
+    color: #172033;
+}
+
+
+/* ================= NAVBAR ================= */
+
+.navbar {
+
+    height: 75px;
+
+    padding: 0 7%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    background: white;
+
+    border-bottom: 1px solid #e8ebf0;
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 1000;
+}
+
+
+/* LOGO */
+
+.logo {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    font-size: 20px;
+
+    font-weight: bold;
+}
+
+
+.logo-box {
+
+    width: 38px;
+
+    height: 38px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #2563eb;
+
+    color: white;
+
+    border-radius: 9px;
+
+    font-size: 14px;
+
+    font-weight: bold;
+}
+
+
+/* NAV LINKS */
+
+.nav-links {
+
+    display: flex;
+
+    gap: 35px;
+}
+
+
+.nav-links a {
+
+    text-decoration: none;
+
+    color: #606b7d;
+
+    font-size: 14px;
+
+    transition: 0.3s;
+}
+
+
+.nav-links a:hover {
+
+    color: #2563eb;
+}
+
+
+/* NAV BUTTONS */
+
+.nav-buttons {
+
+    display: flex;
+
+    gap: 10px;
+}
+
+
+.login-btn,
+.signup-btn {
+
+    text-decoration: none;
+
+    padding: 10px 20px;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    transition: 0.3s;
+}
+
+
+.login-btn {
+
+    color: #2563eb;
+
+    border: 1px solid #2563eb;
+
+    background: white;
+}
+
+
+.login-btn:hover {
+
+    background: #eff6ff;
+}
+
+
+.signup-btn {
+
+    color: white;
+
+    background: #2563eb;
+}
+
+
+.signup-btn:hover {
+
+    background: #1d4ed8;
+}
+
+
+/* MOBILE MENU */
+
+.menu-btn {
+
+    display: none;
+
+    border: none;
+
+    background: transparent;
+
+    font-size: 28px;
+
+    cursor: pointer;
+}
+
+
+/* ================= HERO ================= */
+
+.hero {
+
+    min-height: 650px;
+
+    padding: 80px 8%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 70px;
+
+    background:
+        radial-gradient(
+            circle at 85% 30%,
+            #dbeafe,
+            transparent 30%
+        ),
+        #f7f9fc;
+}
+
+
+/* HERO CONTENT */
+
+.hero-content {
+
+    max-width: 580px;
+}
+
+
+/* BADGE */
+
+.badge {
+
+    display: inline-block;
+
+    padding: 8px 15px;
+
+    margin-bottom: 25px;
+
+    background: #e8f0ff;
+
+    color: #2563eb;
+
+    border-radius: 30px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+
+/* HERO HEADING */
+
+.hero h1 {
+
+    font-size: 58px;
+
+    line-height: 1.08;
+
+    letter-spacing: -2px;
+
+    margin-bottom: 25px;
+}
+
+
+.hero h1 span {
+
+    display: block;
+
+    color: #2563eb;
+}
+
+
+/* HERO DESCRIPTION */
+
+.hero-content > p {
+
+    color: #667085;
+
+    font-size: 17px;
+
+    line-height: 1.7;
+
+    margin-bottom: 30px;
+}
+
+
+/* HERO BUTTONS */
+
+.hero-buttons {
+
+    display: flex;
+
+    gap: 15px;
+
+    margin-bottom: 25px;
+}
+
+
+.primary-btn,
+.secondary-btn {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 14px 23px;
+
+    border-radius: 9px;
+
+    text-decoration: none;
+
+    font-weight: 600;
+
+    transition: 0.3s;
+}
+
+
+.primary-btn {
+
+    background: #2563eb;
+
+    color: white;
+
+    box-shadow:
+        0 8px 20px rgba(37, 99, 235, 0.20);
+}
+
+
+.primary-btn:hover {
+
+    background: #1d4ed8;
+
+    transform: translateY(-2px);
+}
+
+
+.secondary-btn {
+
+    background: white;
+
+    color: #344054;
+
+    border: 1px solid #dfe3e8;
+}
+
+
+.secondary-btn:hover {
+
+    background: #f8fafc;
+}
+
+
+/* TRUST */
+
+.trust {
+
+    display: flex;
+
+    gap: 20px;
+
+    color: #7a8494;
+
+    font-size: 13px;
+}
+
+
+/* ================= BILLING PREVIEW ================= */
+
+.billing-preview {
+
+    width: 470px;
+
+    background: white;
+
+    border: 1px solid #e5e9f0;
+
+    border-radius: 16px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 25px 60px rgba(28, 42, 70, 0.12);
+
+    transform: rotate(1deg);
+
+    transition: 0.4s;
+}
+
+
+.billing-preview:hover {
+
+    transform: rotate(0deg) translateY(-5px);
+}
+
+
+/* WINDOW HEADER */
+
+.window-header {
+
+    height: 48px;
+
+    display: flex;
+
+    align-items: center;
+
+    background: #f4f6f9;
+
+    border-bottom: 1px solid #e3e7ed;
+
+    padding: 0 18px;
+}
+
+
+.window-dots {
+
+    display: flex;
+
+    gap: 6px;
+}
+
+
+.window-dots span {
+
+    width: 9px;
+
+    height: 9px;
+
+    border-radius: 50%;
+
+    background: #c5cad3;
+}
+
+
+.window-header p {
+
+    margin: auto;
+
+    font-size: 13px;
+
+    color: #687386;
+}
+
+
+/* PREVIEW CONTENT */
+
+.preview-content {
+
+    padding: 25px;
+}
+
+
+/* SALES HEADER */
+
+.sales-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 25px;
+}
+
+
+.sales-header small {
+
+    color: #8992a2;
+}
+
+
+.sales-header h2 {
+
+    margin-top: 6px;
+
+    font-size: 29px;
+}
+
+
+.money-icon {
+
+    width: 45px;
+
+    height: 45px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #e8f0ff;
+
+    color: #2563eb;
+
+    border-radius: 10px;
+
+    font-size: 20px;
+
+    font-weight: bold;
+}
+
+
+/* STATS */
+
+.stats {
+
+    display: flex;
+
+    gap: 15px;
+
+    margin-bottom: 20px;
+}
+
+
+.stat-card {
+
+    flex: 1;
+
+    padding: 15px;
+
+    background: #f7f9fc;
+
+    border-radius: 10px;
+}
+
+
+.stat-card small {
+
+    display: block;
+
+    color: #858e9f;
+
+    margin-bottom: 7px;
+}
+
+
+.stat-card strong {
+
+    font-size: 20px;
+}
+
+
+/* INVOICE */
+
+.invoice {
+
+    border: 1px solid #edf0f4;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+}
+
+
+.invoice-row {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    padding: 13px 15px;
+
+    border-bottom: 1px solid #edf0f4;
+
+    font-size: 13px;
+
+    color: #697386;
+}
+
+
+.invoice-heading {
+
+    font-weight: bold;
+
+    color: #374151;
+
+    background: #f8fafc;
+}
+
+
+.invoice-total {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    padding: 15px;
+
+    background: #f8fafc;
+
+    font-size: 14px;
+}
+
+
+/* ================= FEATURES ================= */
+
+.features {
+
+    padding: 100px 8%;
+
+    background: white;
+}
+
+
+.section-heading {
+
+    text-align: center;
+
+    margin-bottom: 55px;
+}
+
+
+.section-heading > p {
+
+    color: #2563eb;
+
+    font-size: 12px;
+
+    font-weight: bold;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 10px;
+}
+
+
+.section-heading h2 {
+
+    font-size: 38px;
+}
+
+
+.section-heading h2 span {
+
+    color: #2563eb;
+}
+
+
+/* FEATURE GRID */
+
+.feature-container {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 20px;
+}
+
+
+/* FEATURE CARD */
+
+.feature-card {
+
+    padding: 30px;
+
+    background: white;
+
+    border: 1px solid #e8ebf0;
+
+    border-radius: 14px;
+
+    transition: 0.3s;
+}
+
+
+.feature-card:hover {
+
+    transform: translateY(-6px);
+
+    box-shadow:
+        0 15px 35px rgba(30, 50, 80, 0.08);
+}
+
+
+.feature-icon {
+
+    width: 48px;
+
+    height: 48px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #eaf1ff;
+
+    border-radius: 10px;
+
+    font-size: 22px;
+
+    margin-bottom: 20px;
+}
+
+
+.feature-card h3 {
+
+    margin-bottom: 10px;
+
+    font-size: 18px;
+}
+
+
+.feature-card p {
+
+    color: #737d8e;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+}
+
+
+/* ================= ABOUT ================= */
+
+.about {
+
+    padding: 100px 20px;
+
+    text-align: center;
+
+    background: #f4f7fb;
+}
+
+
+.about-content {
+
+    max-width: 650px;
+
+    margin: auto;
+}
+
+
+.about-label {
+
+    color: #2563eb;
+
+    font-size: 12px;
+
+    font-weight: bold;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 15px;
+}
+
+
+.about h2 {
+
+    font-size: 42px;
+
+    margin-bottom: 20px;
+}
+
+
+.about h2 span {
+
+    color: #2563eb;
+}
+
+
+.about-content > p:not(.about-label) {
+
+    color: #6b7586;
+
+    line-height: 1.7;
+
+    margin-bottom: 30px;
+}
+
+
+/* ================= FOOTER ================= */
+
+footer {
+
+    padding: 30px 8%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    background: #111827;
+
+    color: #9ca3af;
+}
+
+
+.footer-logo {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    color: white;
+
+    font-weight: bold;
+}
+
+
+.footer-logo .logo-box {
+
+    width: 32px;
+
+    height: 32px;
+
+    border-radius: 7px;
+}
+
+
+footer p {
+
+    font-size: 13px;
+}
+
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 1050px) {
+
+    .hero {
+
+        flex-direction: column;
+
+        text-align: center;
+    }
+
+
+    .hero-content {
+
+        max-width: 700px;
+    }
+
+
+    .hero-buttons {
+
+        justify-content: center;
+    }
+
+
+    .trust {
+
+        justify-content: center;
+    }
+
+
+    .billing-preview {
+
+        max-width: 470px;
+
+        width: 90%;
+    }
+
+
+    .feature-container {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .navbar {
+
+        padding: 0 5%;
+    }
+
+
+    .nav-links {
+
+        display: none;
+
+        position: absolute;
+
+        top: 75px;
+
+        left: 0;
+
+        width: 100%;
+
+        padding: 20px;
+
+        flex-direction: column;
+
+        gap: 20px;
+
+        background: white;
+
+        border-bottom: 1px solid #eee;
+
+        text-align: center;
+    }
+
+
+    .nav-links.active {
+
+        display: flex;
+    }
+
+
+    .nav-buttons {
+
+        display: none;
+    }
+
+
+    .menu-btn {
+
+        display: block;
+    }
+
+
+    .hero {
+
+        padding: 60px 5%;
+    }
+
+
+    .hero h1 {
+
+        font-size: 43px;
+    }
+
+
+    .hero-content > p {
+
+        font-size: 16px;
+    }
+
+
+    .hero-buttons {
+
+        flex-direction: column;
+    }
+
+
+    .primary-btn,
+    .secondary-btn {
+
+        justify-content: center;
+    }
+
+
+    .trust {
+
+        flex-direction: column;
+
+        gap: 8px;
+    }
+
+
+    .billing-preview {
+
+        width: 100%;
+    }
+
+
+    .feature-container {
+
+        grid-template-columns: 1fr;
+    }
+
+
+    .section-heading h2 {
+
+        font-size: 30px;
+    }
+
+
+    .about h2 {
+
+        font-size: 32px;
+    }
+
+
+    footer {
+
+        flex-direction: column;
+
+        gap: 15px;
+
+        text-align: center;
+    }
+
+}

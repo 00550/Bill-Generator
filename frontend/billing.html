@@ -1,0 +1,543 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Billing Desk - Create Bill</title>
+
+    <link rel="stylesheet" href="billing.css">
+</head>
+
+<body>
+
+<div class="invoice">
+
+    <!-- SHOP HEADER -->
+    <div class="shop-header">
+
+        <h1 id="shopName">
+            Loading Shop...
+        </h1>
+
+        <p id="shopAddress">
+            Loading address...
+        </p>
+
+        <p>
+            Mobile:
+            <span id="shopPhone">-</span>
+            |
+            GSTIN:
+            <span id="shopGST">-</span>
+        </p>
+
+    </div>
+
+
+    <!-- CUSTOMER / BILL INFORMATION -->
+    <div class="bill-info">
+
+        <div>
+
+            <div class="info-row">
+
+                <span class="info-label">
+                    Customer Name:
+                </span>
+
+                <input
+                    type="text"
+                    id="customerName"
+                    class="input-line"
+                    placeholder="Customer name"
+                >
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span class="info-label">
+                    Mobile:
+                </span>
+
+                <input
+                    type="text"
+                    id="customerPhone"
+                    class="input-line"
+                    placeholder="Mobile number"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div>
+
+            <div class="info-row">
+
+                <span class="info-label">
+                    Vehicle No:
+                </span>
+
+                <input
+                    type="text"
+                    id="vehicleNo"
+                    class="input-line"
+                    placeholder="Vehicle number"
+                >
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span class="info-label">
+                    Date & Time:
+                </span>
+
+                <span id="billDateTime">
+                    -
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- BILL ITEMS -->
+    <table class="bill-table">
+
+        <thead>
+
+            <tr>
+
+                <th>Sl<br>No</th>
+                <th>Description</th>
+                <th>HSN</th>
+                <th>Qty</th>
+                <th>Rate</th>
+                <th>Discount</th>
+                <th>Amount</th>
+                <th class="remove-column">
+                    Action
+                </th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody id="itemsContainer">
+
+            <tr class="bill-item">
+
+                <td class="serial">
+                    1
+                </td>
+
+                <td>
+
+                    <input
+                        type="text"
+                        class="productName description-input"
+                        placeholder="Product name"
+                    >
+
+                </td>
+
+                <td>
+
+                    <input
+                        type="text"
+                        class="hsn"
+                        placeholder="HSN"
+                    >
+
+                </td>
+
+                <td>
+
+                    <input
+                        type="number"
+                        class="quantity"
+                        value="1"
+                        min="1"
+                        oninput="calculateTotal()"
+                    >
+
+                </td>
+
+                <td>
+
+                    <input
+                        type="number"
+                        class="price"
+                        value="0"
+                        min="0"
+                        step="0.01"
+                        oninput="calculateTotal()"
+                    >
+
+                </td>
+
+                <td>
+
+                    <input
+                        type="number"
+                        class="discount"
+                        value="0"
+                        min="0"
+                        step="0.01"
+                        oninput="calculateTotal()"
+                    >
+
+                </td>
+
+                <td class="amount">
+                    ₹0.00
+                </td>
+
+                <td class="remove-column">
+
+                    <button
+                        type="button"
+                        class="remove-btn"
+                        onclick="removeItem(this)"
+                    >
+                        X
+                    </button>
+
+                </td>
+
+            </tr>
+
+        </tbody>
+
+    </table>
+
+
+    <!-- BUTTONS -->
+    <div class="buttons">
+
+        <button
+            type="button"
+            onclick="addItem()"
+        >
+            + Add Item
+        </button>
+
+        <button
+            type="button"
+            onclick="calculateTotal()"
+        >
+            Calculate
+        </button>
+
+        <button
+            type="button"
+            onclick="printBill()"
+        >
+            Print Bill
+        </button>
+
+        <button
+            type="button"
+            class="save-bill-btn"
+            onclick="saveBill()"
+        >
+            Save Bill
+        </button>
+
+        <button
+            type="button"
+            class="danger"
+            onclick="goBack()"
+        >
+            Back
+        </button>
+
+    </div>
+
+
+    <!-- PAYMENT METHOD -->
+    <div class="payment-method-section">
+
+        <label for="paymentMethod">
+            Payment Method:
+        </label>
+
+        <select id="paymentMethod">
+
+            <option value="cash">
+                Cash
+            </option>
+
+            <option value="upi">
+                UPI
+            </option>
+
+            <option value="card">
+                Card
+            </option>
+
+            <option value="credit">
+                Credit
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <!-- SUMMARY -->
+    <div class="summary-area">
+
+        <table class="summary">
+
+            <tr>
+
+                <td>
+                    Subtotal
+                </td>
+
+                <td></td>
+
+                <td>
+                    ₹<span id="subtotal">0.00</span>
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <td>
+                    CGST (%)
+                </td>
+
+                <td>
+
+                    <input
+                        type="number"
+                        id="cgstRate"
+                        value="0"
+                        min="0"
+                        step="0.01"
+                        oninput="calculateTotal()"
+                    >
+
+                </td>
+
+                <td>
+                    ₹<span id="cgstAmount">0.00</span>
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <td>
+                    SGST (%)
+                </td>
+
+                <td>
+
+                    <input
+                        type="number"
+                        id="sgstRate"
+                        value="0"
+                        min="0"
+                        step="0.01"
+                        oninput="calculateTotal()"
+                    >
+
+                </td>
+
+                <td>
+                    ₹<span id="sgstAmount">0.00</span>
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <td>
+                    IGST (%)
+                </td>
+
+                <td>
+
+                    <input
+                        type="number"
+                        id="igstRate"
+                        value="0"
+                        min="0"
+                        step="0.01"
+                        oninput="calculateTotal()"
+                    >
+
+                </td>
+
+                <td>
+                    ₹<span id="igstAmount">0.00</span>
+                </td>
+
+            </tr>
+
+
+            <tr class="grand-total">
+
+                <td>
+                    Grand Total
+                </td>
+
+                <td></td>
+
+                <td>
+                    ₹<span id="grandTotal">0.00</span>
+                </td>
+
+            </tr>
+
+        </table>
+
+    </div>
+
+
+    <!-- PAYMENT + BANK -->
+    <div class="lower-section">
+
+        <!-- UPI QR -->
+        <div class="payment-section">
+
+            <h3>
+                Scan & Pay (UPI)
+            </h3>
+
+            <div id="qrcode"></div>
+
+            <div class="upi-id">
+
+                UPI ID:
+                <span id="upiId">
+                    yourupi@upi
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- BANK DETAILS -->
+        <div class="bank-section">
+
+            <h3>
+                Bank Details
+            </h3>
+
+            <table class="bank-table">
+
+                <tr>
+
+                    <td>
+                        Account Name
+                    </td>
+
+                    <td id="accountName">
+                        -
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td>
+                        Account Number
+                    </td>
+
+                    <td id="accountNumber">
+                        -
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td>
+                        Bank Name
+                    </td>
+
+                    <td id="bankName">
+                        -
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td>
+                        IFSC Code
+                    </td>
+
+                    <td id="ifscCode">
+                        -
+                    </td>
+
+                </tr>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- FOOTER -->
+    <div class="footer-section">
+
+        <div>
+
+            Total Amount in Words:
+
+            <span id="amountWords">
+                Rupees Only
+            </span>
+
+        </div>
+
+
+        <div>
+            Authorized Signature
+        </div>
+
+    </div>
+
+
+    <div class="thank-you">
+        🙏 Thank You Visit Once Again 🙏
+    </div>
+
+
+    <p id="message"></p>
+
+</div>
+
+
+<!-- QR CODE LIBRARY -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<!-- BILLING JS -->
+<script src="billing.js"></script>
+
+</body>
+
+</html>

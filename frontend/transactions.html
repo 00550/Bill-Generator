@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Transactions - Billing Desk</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f5f6fa;
+        }
+
+        header {
+            background: #1f2937;
+            color: white;
+            padding: 20px 30px;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        #shopInfo {
+            margin-top: 8px;
+            color: #d1d5db;
+        }
+
+        .container {
+            padding: 30px;
+        }
+
+        .top-buttons {
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .back {
+            background: #6b7280;
+            color: white;
+        }
+
+        .bill {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .bill h3 {
+            margin-top: 0;
+        }
+
+        .total {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .empty {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        #message {
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+
+        <h1>Transactions</h1>
+
+        <div id="shopInfo">
+            Loading shop...
+        </div>
+
+    </header>
+
+
+    <div class="container">
+
+        <div class="top-buttons">
+
+            <button
+                class="back"
+                onclick="goBack()">
+                ← Back to Shop
+            </button>
+
+        </div>
+
+
+        <p id="message"></p>
+
+
+        <div id="transactionsContainer">
+            Loading transactions...
+        </div>
+
+    </div>
+
+
+    <script src="transactions.js"></script>
+
+</body>
+
+</html>

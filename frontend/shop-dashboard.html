@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Shop Dashboard - Billing Desk</title>
+    <link rel="stylesheet" href="shop-dashboard.css">
+
+</head>
+
+<body>
+
+    <header>
+
+        <h1 id="shopName">
+            Loading Shop...
+        </h1>
+
+        <div id="shopInfo">
+            Loading shop information...
+        </div>
+
+    </header>
+
+    <div class="container">
+
+        <button class="back" onclick="goBack()">
+            ← My Shops
+        </button>
+
+        <button class="logout" onclick="logout()">
+            Logout
+        </button>
+
+
+        <div class="actions">
+
+            <div class="card">
+                <h3>Billing</h3>
+                <p>Create and manage bills.</p>
+
+                <button onclick="openBilling()">
+                    Create Bill
+                </button>
+            </div>
+
+
+            <div class="card">
+                <h3>Products</h3>
+                <p>Manage products and stock.</p>
+
+                <button onclick="openProducts()">
+                    Products
+                </button>
+            </div>
+
+
+            <div class="card">
+                <h3>Customers</h3>
+                <p>Manage your customers.</p>
+
+                <button onclick="openCustomers()">
+                    Customers
+                </button>
+            </div>
+
+
+            <div class="card">
+                <h3>Transactions</h3>
+                <p>View shop transactions.</p>
+
+                <button onclick="openTransactions()">
+                    Transactions
+                </button>
+            </div>
+
+
+            <div class="card">
+                <h3>Staff</h3>
+                <p>Manage employees for this shop.</p>
+
+                <button onclick="openStaff()">
+                    Staff
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script src="shop-dashboard.js"></script>
+
+</body>
+
+</html>

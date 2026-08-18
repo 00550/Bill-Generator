@@ -1,0 +1,150 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Add Shop - Billing Desk</title>
+
+    <link rel="stylesheet" href="add-shop.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>Billing Desk</h1>
+    </header>
+
+    <main class="container">
+
+        <div class="card">
+
+            <h2>Add New Shop</h2>
+
+            <h3>Shop Information</h3>
+
+            <label for="shopName">Shop Name</label>
+            <input
+                type="text"
+                id="shopName"
+                placeholder="Enter shop name"
+            >
+
+            <label for="shopAddress">Shop Address</label>
+            <input
+                type="text"
+                id="shopAddress"
+                placeholder="Enter shop address"
+            >
+
+            <label for="phone">Phone</label>
+            <input
+                type="text"
+                id="phone"
+                placeholder="Enter phone number"
+            >
+
+            <label for="email">Email</label>
+            <input
+                type="email"
+                id="email"
+                placeholder="Enter shop email"
+            >
+
+            <label for="gstNumber">GST Number</label>
+            <input
+                type="text"
+                id="gstNumber"
+                placeholder="Enter GST number"
+            >
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Bank Details</h3>
+
+            <label for="accountName">Account Name</label>
+            <input
+                type="text"
+                id="accountName"
+                placeholder="Enter account holder name"
+            >
+
+            <label for="accountNumber">Account Number</label>
+            <input
+                type="text"
+                id="accountNumber"
+                placeholder="Enter account number"
+            >
+
+            <label for="bankName">Bank Name</label>
+            <input
+                type="text"
+                id="bankName"
+                placeholder="Enter bank name"
+            >
+
+            <label for="ifscCode">IFSC Code</label>
+            <input
+                type="text"
+                id="ifscCode"
+                placeholder="Enter IFSC code"
+            >
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>UPI Payment</h3>
+
+            <label for="upiId">UPI ID</label>
+
+            <input
+                type="text"
+                id="upiId"
+                placeholder="example@upi"
+            >
+
+            <p class="help-text">
+                This UPI ID will be used to generate the
+                payment QR code on bills.
+            </p>
+
+        </div>
+
+
+        <div class="actions">
+
+            <button
+                type="button"
+                class="save"
+                onclick="saveShop()"
+            >
+                Save Shop
+            </button>
+
+            <button
+                type="button"
+                class="back"
+                onclick="goBack()"
+            >
+                Cancel
+            </button>
+
+        </div>
+
+        <p id="message"></p>
+
+    </main>
+
+
+    <script src="add-shop.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Billing Desk - Login</title>
+
+    <link rel="stylesheet" href="login.css">
+</head>
+
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+
+    <nav class="navbar">
+
+        <a href="#" class="brand">
+
+            <div class="brand-logo">
+                BD
+            </div>
+
+            <span>Billing Desk</span>
+
+        </a>
+
+        <div class="nav-right">
+
+            <span>New to Billing Desk?</span>
+
+            <a href="signup.html" class="signup-link">
+                Create Account
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="login-container">
+
+
+        <!-- ================= LEFT SECTION ================= -->
+
+        <section class="welcome-section">
+
+            <div class="welcome-content">
+
+                <div class="badge">
+                    ✨ Smart Billing Solution
+                </div>
+
+                <h1>
+                    Manage Your
+                    <span>Business Easily.</span>
+                </h1>
+
+                <p>
+                    Generate professional bills, manage your
+                    transactions, and keep your shop records
+                    organized in one secure platform.
+                </p>
+
+
+                <!-- BENEFITS -->
+
+                <div class="benefits">
+
+                    <div class="benefit">
+
+                        <div class="benefit-icon">
+                            🧾
+                        </div>
+
+                        <div>
+                            <strong>Easy Billing</strong>
+
+                            <small>
+                                Generate bills quickly and easily
+                            </small>
+                        </div>
+
+                    </div>
+
+
+                    <div class="benefit">
+
+                        <div class="benefit-icon">
+                            📊
+                        </div>
+
+                        <div>
+                            <strong>Track Transactions</strong>
+
+                            <small>
+                                Keep all your sales records organized
+                            </small>
+                        </div>
+
+                    </div>
+
+
+                    <div class="benefit">
+
+                        <div class="benefit-icon">
+                            🔐
+                        </div>
+
+                        <div>
+                            <strong>Secure Records</strong>
+
+                            <small>
+                                Your business data stays protected
+                            </small>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= LOGIN SECTION ================= -->
+
+        <section class="login-section">
+
+            <div class="login-card">
+
+
+                <!-- LOGIN LOGO -->
+
+                <div class="login-logo">
+                    BD
+                </div>
+
+
+                <h2>
+                    Welcome Back
+                </h2>
+
+                <p class="login-subtitle">
+                    Login to your Billing Desk account
+                </p>
+
+
+                <!-- LOGIN FORM -->
+
+                <form id="loginForm">
+
+
+                    <!-- EMAIL -->
+
+                    <div class="form-group">
+
+                        <label for="email">
+                            Email Address
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                ✉️
+                            </span>
+
+                            <input
+                                type="email"
+                                id="email"
+                                placeholder="Enter your email"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- PASSWORD -->
+
+                    <div class="form-group">
+
+                        <div class="password-label">
+
+                            <label for="password">
+                                Password
+                            </label>
+
+                            <a href="#">
+                                Forgot Password?
+                            </a>
+
+                        </div>
+
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                🔒
+                            </span>
+
+                            <input
+                                type="password"
+                                id="password"
+                                placeholder="Enter your password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="toggle-password"
+                                onclick="togglePassword()"
+                            >
+                                Show
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- REMEMBER ME -->
+
+                    <div class="remember-row">
+
+                        <label class="remember">
+
+                            <input
+                                type="checkbox"
+                                id="remember"
+                            >
+
+                            Remember me
+
+                        </label>
+
+                    </div>
+
+
+                    <!-- ERROR MESSAGE -->
+
+                    <p
+                        id="message"
+                        class="error"
+                    ></p>
+
+
+                    <!-- LOGIN BUTTON -->
+
+                    <button
+                        type="submit"
+                        class="login-button"
+                    >
+
+                        <span>
+                            Login to Dashboard
+                        </span>
+
+                        <strong>
+                            →
+                        </strong>
+
+                    </button>
+
+                </form>
+
+
+                <!-- DIVIDER -->
+
+                <div class="divider">
+
+                    <span></span>
+
+                    <p>
+                        Secure Login
+                    </p>
+
+                    <span></span>
+
+                </div>
+
+
+                <!-- SECURITY -->
+
+                <div class="security">
+
+                    <span>
+                        🔒
+                    </span>
+
+                    <p>
+                        Your account and business data are protected
+                    </p>
+
+                </div>
+
+
+                <!-- BACK HOME -->
+
+                <a
+                    href="index.html"
+                    class="back-home"
+                >
+                    ← Back to Home
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        <p>
+            © 2026 Billing Desk. All rights reserved.
+        </p>
+
+        <div>
+
+            <span>
+                Secure
+            </span>
+
+            <span>
+                •
+            </span>
+
+            <span>
+                Reliable
+            </span>
+
+            <span>
+                •
+            </span>
+
+            <span>
+                Simple
+            </span>
+
+        </div>
+
+    </footer>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script src="login.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Billing Desk - Owner Dashboard</title>
+    <link rel="stylesheet" href="owner-dashboard.css">
+
+</head>
+
+<body>
+
+    <h1>Billing Desk</h1>
+
+    <h2>Owner Dashboard</h2>
+
+    <div id="ownerInfo"></div>
+
+    <hr>
+
+    <h3>Business Overview</h3>
+
+    <p>Total Sales: ₹<span id="totalSales">0</span></p>
+
+    <p>Today's Sales: ₹<span id="todaySales">0</span></p>
+
+    <p>Monthly Sales: ₹<span id="monthlySales">0</span></p>
+
+    <p>Total Bills: <span id="totalBills">0</span></p>
+
+    <hr>
+
+    <h3>Shop Management</h3>
+
+    <button onclick="addShop()">
+        Add New Shop
+    </button>
+
+    <button onclick="viewShops()">
+        My Shops
+    </button>
+
+    <hr>
+
+    <h3>Transactions</h3>
+
+    <button onclick="viewTransactions()">
+        View All Transactions
+    </button>
+
+    <hr>
+
+    <button onclick="logout()">
+        Logout
+    </button>
+
+    <script src="owner-dashboard.js"></script>
+
+</body>
+
+</html>

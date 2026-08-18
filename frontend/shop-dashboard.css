@@ -1,0 +1,294 @@
+/* ========================================
+   RESET
+======================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* ========================================
+   BODY
+======================================== */
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f5f6fa;
+    color: #1f2937;
+    min-height: 100vh;
+}
+
+
+/* ========================================
+   HEADER
+======================================== */
+
+header {
+    background: #1f2937;
+    color: white;
+    padding: 25px 40px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 700;
+}
+
+#shopInfo {
+    margin-top: 8px;
+    color: #d1d5db;
+    font-size: 15px;
+}
+
+
+/* ========================================
+   MAIN CONTAINER
+======================================== */
+
+.container {
+    padding: 35px 40px;
+    max-width: 1400px;
+    margin: auto;
+}
+
+
+/* ========================================
+   TOP BUTTONS
+======================================== */
+
+.back,
+.logout {
+    padding: 11px 20px;
+    border: none;
+    border-radius: 7px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.back {
+    background: #6b7280;
+    color: white;
+    margin-right: 10px;
+}
+
+.back:hover {
+    background: #4b5563;
+    transform: translateY(-2px);
+}
+
+.logout {
+    background: #dc2626;
+    color: white;
+}
+
+.logout:hover {
+    background: #b91c1c;
+    transform: translateY(-2px);
+}
+
+
+/* ========================================
+   ACTION GRID
+======================================== */
+
+.actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 25px;
+    margin-top: 35px;
+}
+
+
+/* ========================================
+   CARDS
+======================================== */
+
+.card {
+    background: white;
+    padding: 28px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e5e7eb;
+    transition: all 0.25s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.card h3 {
+    margin-bottom: 12px;
+    font-size: 21px;
+    color: #1f2937;
+}
+
+.card p {
+    color: #6b7280;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+
+/* ========================================
+   CARD BUTTONS
+======================================== */
+
+.card button {
+    padding: 11px 18px;
+    border: none;
+    border-radius: 7px;
+    background: #2563eb;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.card button:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+}
+
+
+/* ========================================
+   DIFFERENT CARD BUTTON COLORS
+======================================== */
+
+/* Billing */
+
+.card:nth-child(1) button {
+    background: #16a34a;
+}
+
+.card:nth-child(1) button:hover {
+    background: #15803d;
+}
+
+
+/* Products */
+
+.card:nth-child(2) button {
+    background: #2563eb;
+}
+
+.card:nth-child(2) button:hover {
+    background: #1d4ed8;
+}
+
+
+/* Customers */
+
+.card:nth-child(3) button {
+    background: #7c3aed;
+}
+
+.card:nth-child(3) button:hover {
+    background: #6d28d9;
+}
+
+
+/* Transactions */
+
+.card:nth-child(4) button {
+    background: #ea580c;
+}
+
+.card:nth-child(4) button:hover {
+    background: #c2410c;
+}
+
+
+/* Staff */
+
+.card:nth-child(5) button {
+    background: #0891b2;
+}
+
+.card:nth-child(5) button:hover {
+    background: #0e7490;
+}
+
+
+/* ========================================
+   BUTTON ACTIVE EFFECT
+======================================== */
+
+button:active {
+    transform: scale(0.97);
+}
+
+
+/* ========================================
+   MOBILE RESPONSIVE
+======================================== */
+
+@media (max-width: 700px) {
+
+    header {
+        padding: 20px;
+    }
+
+    header h1 {
+        font-size: 24px;
+    }
+
+    #shopInfo {
+        font-size: 14px;
+    }
+
+    .container {
+        padding: 25px 20px;
+    }
+
+    .actions {
+        grid-template-columns: 1fr;
+        gap: 18px;
+        margin-top: 25px;
+    }
+
+    .back,
+    .logout {
+        width: 100%;
+        margin: 5px 0;
+    }
+
+    .card {
+        padding: 22px;
+    }
+
+    .card button {
+        width: 100%;
+    }
+}
+
+
+/* ========================================
+   SMALL MOBILE
+======================================== */
+
+@media (max-width: 400px) {
+
+    header h1 {
+        font-size: 21px;
+    }
+
+    .container {
+        padding: 20px 15px;
+    }
+
+    .card h3 {
+        font-size: 19px;
+    }
+
+    .card p {
+        font-size: 14px;
+    }
+}
