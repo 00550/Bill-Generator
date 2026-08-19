@@ -1,20 +1,18 @@
-
 const token = localStorage.getItem("token");
 const shopId = localStorage.getItem("selectedShopId");
 
+let shop = null;
 
-// ========================================
-// CHECK LOGIN
-// ========================================
+
+// =====================================================
+// AUTH CHECK
+// =====================================================
 
 if (!token) {
+
     window.location.href = "login.html";
+
 }
-
-
-// ========================================
-// CHECK SHOP
-// ========================================
 
 if (!shopId) {
 
@@ -25,9 +23,29 @@ if (!shopId) {
 }
 
 
-// ========================================
-// LOAD SHOP DETAILS
-// ========================================
+// =====================================================
+// ELEMENTS
+// =====================================================
+
+const itemsBody =
+    document.getElementById("itemsBody");
+
+const discountInput =
+    document.getElementById("discount");
+
+const gstType =
+    document.getElementById("gstType");
+
+const gstRateInput =
+    document.getElementById("gstRate");
+
+const paymentMethod =
+    document.getElementById("paymentMethod");
+
+
+// =====================================================
+// LOAD SHOP
+// =====================================================
 
 async function loadShop() {
 
@@ -55,227 +73,121 @@ async function loadShop() {
                 "Unable to load shop"
             );
 
-            window.location.href = "shops.html";
+            window.location.href =
+                "shops.html";
 
             return;
         }
 
 
-        const shop = data.shop;
-
-
-        document.getElementById("shopName").textContent =
-            shop.shopName || "Billing Desk";
-
-
-        document.getElementById("shopAddress").textContent =
-            shop.shopAddress || "-";
-
-
-        document.getElementById("shopPhone").textContent =
-            shop.phone || "-";
-
-
-        document.getElementById("shopGST").textContent =
-            shop.gstNumber || "-";
-
-
-        /*
-         * Optional shop payment information.
-         *
-         * These fields will only be filled if your
-         * Shop model contains them.
-         */
-
-        if (shop.upiId) {
-
-            document.getElementById("upiId").textContent =
-                shop.upiId;
-
-            generateQRCode(shop.upiId);
-
-        }
-
-
-        if (shop.accountName) {
-
-            document.getElementById("accountName").textContent =
-                shop.accountName;
-
-        }
-
-
-        if (shop.accountNumber) {
-
-            document.getElementById("accountNumber").textContent =
-                shop.accountNumber;
-
-        }
-
-
-        if (shop.bankName) {
-
-            document.getElementById("bankName").textContent =
-                shop.bankName;
-
-        }
-
-
-        if (shop.ifscCode) {
-
-            document.getElementById("ifscCode").textContent =
-                shop.ifscCode;
-
-        }
-
-
-    } catch (error) {
-
-        console.error(
-            "Load shop error:",
-            error
-        );
+        shop = data.shop;
 
 
         document.getElementById(
             "shopName"
-        ).textContent = "Unable to load shop";
+        ).textContent =
+            shop.shopName;
 
 
         document.getElementById(
-            "shopAddress"
-        ).textContent = "Unable to connect to server.";
+            "shopDetails"
+        ).textContent =
+            `${shop.shopAddress} | ${
+                shop.phone || "No phone"
+            } | GSTIN: ${
+                shop.gstNumber || "Not provided"
+            }`;
+
+
+        document.getElementById(
+            "upiIdDisplay"
+        ).textContent =
+            shop.upiId
+                ? `UPI ID: ${shop.upiId}`
+                : "UPI ID not configured";
+
+
+        updateQRCode();
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Unable to connect to server."
+        );
 
     }
 
 }
 
 
-// ========================================
-// DATE & TIME
-// ========================================
-
-function setBillDateTime() {
-
-    const dateElement =
-        document.getElementById("billDateTime");
-
-
-    if (!dateElement) {
-        return;
-    }
-
-
-    const now = new Date();
-
-
-    dateElement.textContent =
-        now.toLocaleString("en-IN", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: true
-        });
-
-}
-
-
-// ========================================
+// =====================================================
 // ADD ITEM
-// ========================================
+// =====================================================
 
 function addItem() {
-
-    const container =
-        document.getElementById("itemsContainer");
-
 
     const row =
         document.createElement("tr");
 
 
-    row.className = "bill-item";
-
-
     row.innerHTML = `
-
-        <td class="serial">
-            -
-        </td>
 
         <td>
 
             <input
                 type="text"
-                class="productName description-input"
+                class="item-input product-name"
                 placeholder="Product name"
             >
 
         </td>
 
-        <td>
-
-            <input
-                type="text"
-                class="hsn"
-                placeholder="HSN"
-            >
-
-        </td>
 
         <td>
 
             <input
                 type="number"
-                class="quantity"
-                value="1"
+                class="qty-input quantity"
                 min="1"
-                step="1"
-                oninput="calculateTotal()"
+                value="1"
             >
 
         </td>
+
 
         <td>
 
             <input
                 type="number"
-                class="price"
-                value="0"
+                class="price-input price"
                 min="0"
                 step="0.01"
-                oninput="calculateTotal()"
+                value="0"
             >
 
         </td>
+
 
         <td>
 
-            <input
-                type="number"
-                class="discount"
-                value="0"
-                min="0"
-                step="0.01"
-                oninput="calculateTotal()"
-            >
+            <span class="amount">
+                ₹0.00
+            </span>
 
         </td>
 
-        <td class="amount">
-            ₹0.00
-        </td>
 
-        <td class="remove-column">
+        <td>
 
             <button
                 type="button"
                 class="remove-btn"
                 onclick="removeItem(this)"
             >
-                X
+                ×
             </button>
 
         </td>
@@ -283,32 +195,328 @@ function addItem() {
     `;
 
 
-    container.appendChild(row);
+    itemsBody.appendChild(row);
 
 
-    updateSerialNumbers();
+    row.querySelectorAll("input")
+        .forEach(input => {
 
-    calculateTotal();
+            input.addEventListener(
+                "input",
+                calculateBill
+            );
+
+        });
+
+
+    calculateBill();
 
 }
 
 
-// ========================================
+// =====================================================
 // REMOVE ITEM
-// ========================================
+// =====================================================
 
 function removeItem(button) {
 
+    button
+        .closest("tr")
+        .remove();
+
+
+    calculateBill();
+
+}
+
+
+// =====================================================
+// CALCULATE BILL
+// =====================================================
+
+function calculateBill() {
+
+    let subtotal = 0;
+
+
     const rows =
-        document.querySelectorAll(
-            "#itemsContainer .bill-item"
+        itemsBody.querySelectorAll("tr");
+
+
+    rows.forEach(row => {
+
+        const quantity =
+            Number(
+                row.querySelector(".quantity").value
+            ) || 0;
+
+
+        const price =
+            Number(
+                row.querySelector(".price").value
+            ) || 0;
+
+
+        const amount =
+            quantity * price;
+
+
+        subtotal += amount;
+
+
+        row.querySelector(".amount")
+            .textContent =
+            formatCurrency(amount);
+
+    });
+
+
+    // ================================================
+    // DISCOUNT
+    // ================================================
+
+    let discount =
+        Number(discountInput.value) || 0;
+
+
+    discount =
+        Math.min(
+            Math.max(discount, 0),
+            100
         );
 
 
-    if (rows.length <= 1) {
+    const discountAmount =
+        subtotal *
+        discount /
+        100;
 
-        alert(
-            "At least one product is required."
+
+    const taxableAmount =
+        Math.max(
+            subtotal -
+            discountAmount,
+            0
+        );
+
+
+    // ================================================
+    // GST
+    // ================================================
+
+    let gstRate =
+        Number(gstRateInput.value) || 0;
+
+
+    gstRate =
+        Math.max(gstRate, 0);
+
+
+    let cgstRate = 0;
+    let sgstRate = 0;
+    let igstRate = 0;
+
+
+    if (gstType.value === "local") {
+
+        cgstRate =
+            gstRate / 2;
+
+        sgstRate =
+            gstRate / 2;
+
+        document.getElementById(
+            "cgstRow"
+        ).classList.remove("hidden");
+
+        document.getElementById(
+            "sgstRow"
+        ).classList.remove("hidden");
+
+        document.getElementById(
+            "igstRow"
+        ).classList.add("hidden");
+
+    } else {
+
+        igstRate =
+            gstRate;
+
+        document.getElementById(
+            "cgstRow"
+        ).classList.add("hidden");
+
+        document.getElementById(
+            "sgstRow"
+        ).classList.add("hidden");
+
+        document.getElementById(
+            "igstRow"
+        ).classList.remove("hidden");
+
+    }
+
+
+    // ================================================
+    // TAX AMOUNTS
+    // ================================================
+
+    const cgstAmount =
+        taxableAmount *
+        cgstRate /
+        100;
+
+
+    const sgstAmount =
+        taxableAmount *
+        sgstRate /
+        100;
+
+
+    const igstAmount =
+        taxableAmount *
+        igstRate /
+        100;
+
+
+    const totalGst =
+        cgstAmount +
+        sgstAmount +
+        igstAmount;
+
+
+    const grandTotal =
+        taxableAmount +
+        totalGst;
+
+
+    // ================================================
+    // DISPLAY
+    // ================================================
+
+    document.getElementById(
+        "subtotal"
+    ).textContent =
+        formatCurrency(subtotal);
+
+
+    document.getElementById(
+        "discountAmount"
+    ).textContent =
+        formatCurrency(discountAmount);
+
+
+    document.getElementById(
+        "taxableAmount"
+    ).textContent =
+        formatCurrency(taxableAmount);
+
+
+    document.getElementById(
+        "cgstRateLabel"
+    ).textContent =
+        `${cgstRate.toFixed(2)}%`;
+
+
+    document.getElementById(
+        "sgstRateLabel"
+    ).textContent =
+        `${sgstRate.toFixed(2)}%`;
+
+
+    document.getElementById(
+        "igstRateLabel"
+    ).textContent =
+        `${igstRate.toFixed(2)}%`;
+
+
+    document.getElementById(
+        "cgstAmount"
+    ).textContent =
+        formatCurrency(cgstAmount);
+
+
+    document.getElementById(
+        "sgstAmount"
+    ).textContent =
+        formatCurrency(sgstAmount);
+
+
+    document.getElementById(
+        "igstAmount"
+    ).textContent =
+        formatCurrency(igstAmount);
+
+
+    document.getElementById(
+        "totalGst"
+    ).textContent =
+        formatCurrency(totalGst);
+
+
+    document.getElementById(
+        "grandTotal"
+    ).textContent =
+        formatCurrency(grandTotal);
+
+
+    return {
+
+        subtotal,
+
+        discount,
+
+        discountAmount,
+
+        taxableAmount,
+
+        gstRate,
+
+        cgstRate,
+
+        sgstRate,
+
+        igstRate,
+
+        cgstAmount,
+
+        sgstAmount,
+
+        igstAmount,
+
+        totalGst,
+
+        grandTotal
+
+    };
+
+}
+
+
+// =====================================================
+// PAYMENT METHOD
+// =====================================================
+
+paymentMethod.addEventListener(
+    "change",
+    updateQRCode
+);
+
+
+function updateQRCode() {
+
+    const upiSection =
+        document.getElementById(
+            "upiSection"
+        );
+
+
+    if (
+        paymentMethod.value !== "upi"
+    ) {
+
+        upiSection.classList.add(
+            "hidden"
         );
 
         return;
@@ -316,334 +524,80 @@ function removeItem(button) {
     }
 
 
-    button.closest(".bill-item").remove();
+    upiSection.classList.remove(
+        "hidden"
+    );
 
 
-    updateSerialNumbers();
-
-    calculateTotal();
-
-}
-
-
-// ========================================
-// UPDATE SERIAL NUMBERS
-// ========================================
-
-function updateSerialNumbers() {
-
-    const rows =
-        document.querySelectorAll(
-            "#itemsContainer .bill-item"
-        );
-
-
-    rows.forEach((row, index) => {
-
-        const serial =
-            row.querySelector(".serial");
-
-
-        if (serial) {
-
-            serial.textContent =
-                index + 1;
-
-        }
-
-    });
+    generateQRCode();
 
 }
 
 
-// ========================================
-// CALCULATE TOTAL
-// ========================================
+// =====================================================
+// QR CODE
+// =====================================================
 
-function calculateTotal() {
+function generateQRCode() {
 
-    const rows =
-        document.querySelectorAll(
-            "#itemsContainer .bill-item"
-        );
-
-
-    let subtotal = 0;
-
-
-    rows.forEach((row) => {
-
-        const quantityInput =
-            row.querySelector(".quantity");
-
-
-        const priceInput =
-            row.querySelector(".price");
-
-
-        const discountInput =
-            row.querySelector(".discount");
-
-
-        const quantity =
-            Number(quantityInput?.value) || 0;
-
-
-        const price =
-            Number(priceInput?.value) || 0;
-
-
-        const discount =
-            Number(discountInput?.value) || 0;
-
-
-        const grossAmount =
-            quantity * price;
-
-
-        /*
-         * Discount is treated as a fixed amount
-         * for each item.
-         */
-
-        const finalAmount =
-            Math.max(
-                grossAmount - discount,
-                0
-            );
-
-
-        const amountElement =
-            row.querySelector(".amount");
-
-
-        if (amountElement) {
-
-            amountElement.textContent =
-                `₹${finalAmount.toFixed(2)}`;
-
-        }
-
-
-        subtotal += finalAmount;
-
-    });
-
-
-    // ========================================
-    // GST
-    // ========================================
-
-    const cgstRate =
-        Number(
-            document.getElementById(
-                "cgstRate"
-            )?.value
-        ) || 0;
-
-
-    const sgstRate =
-        Number(
-            document.getElementById(
-                "sgstRate"
-            )?.value
-        ) || 0;
-
-
-    const igstRate =
-        Number(
-            document.getElementById(
-                "igstRate"
-            )?.value
-        ) || 0;
-
-
-    const cgstAmount =
-        subtotal * cgstRate / 100;
-
-
-    const sgstAmount =
-        subtotal * sgstRate / 100;
-
-
-    const igstAmount =
-        subtotal * igstRate / 100;
-
-
-    const grandTotal =
-        subtotal +
-        cgstAmount +
-        sgstAmount +
-        igstAmount;
-
-
-    // ========================================
-    // DISPLAY TOTALS
-    // ========================================
-
-    document.getElementById(
-        "subtotal"
-    ).textContent =
-        subtotal.toFixed(2);
-
-
-    document.getElementById(
-        "cgstAmount"
-    ).textContent =
-        cgstAmount.toFixed(2);
-
-
-    document.getElementById(
-        "sgstAmount"
-    ).textContent =
-        sgstAmount.toFixed(2);
-
-
-    document.getElementById(
-        "igstAmount"
-    ).textContent =
-        igstAmount.toFixed(2);
-
-
-    document.getElementById(
-        "grandTotal"
-    ).textContent =
-        grandTotal.toFixed(2);
-
-
-    // ========================================
-    // AMOUNT IN WORDS
-    // ========================================
-
-    const words =
-        numberToWords(
-            Math.round(grandTotal)
-        );
-
-
-    const amountWords =
+    const qr =
         document.getElementById(
-            "amountWords"
+            "qrcode"
         );
 
 
-    if (amountWords) {
+    qr.innerHTML = "";
 
-        amountWords.textContent =
-            words + " Rupees Only";
+
+    if (!shop || !shop.upiId) {
+
+        qr.innerHTML = `
+            <p>
+                UPI ID is not configured
+                for this shop.
+            </p>
+        `;
+
+        return;
 
     }
 
 
-    return {
-        subtotal,
-        cgstRate,
-        sgstRate,
-        igstRate,
-        cgstAmount,
-        sgstAmount,
-        igstAmount,
-        grandTotal
-    };
-
-}
+    const calculation =
+        calculateBill();
 
 
-// ========================================
-// GET BILL ITEMS
-// ========================================
-
-function getBillItems() {
-
-    const rows =
-        document.querySelectorAll(
-            "#itemsContainer .bill-item"
-        );
+    const amount =
+        calculation.grandTotal
+            .toFixed(2);
 
 
-    const items = [];
+    const upiUrl =
+        `upi://pay?pa=${
+            encodeURIComponent(shop.upiId)
+        }&pn=${
+            encodeURIComponent(shop.shopName)
+        }&am=${
+            amount
+        }&cu=INR`;
 
 
-    rows.forEach((row) => {
+    new QRCode(qr, {
 
-        const productName =
-            row.querySelector(
-                ".productName"
-            )?.value.trim();
+        text: upiUrl,
 
+        width: 180,
 
-        const hsn =
-            row.querySelector(
-                ".hsn"
-            )?.value.trim();
-
-
-        const quantity =
-            Number(
-                row.querySelector(
-                    ".quantity"
-                )?.value
-            ) || 0;
-
-
-        const price =
-            Number(
-                row.querySelector(
-                    ".price"
-                )?.value
-            ) || 0;
-
-
-        const discount =
-            Number(
-                row.querySelector(
-                    ".discount"
-                )?.value
-            ) || 0;
-
-
-        const total =
-            Math.max(
-                quantity * price - discount,
-                0
-            );
-
-
-        /*
-         * HSN is kept in the frontend data.
-         *
-         * Your current Transaction model does
-         * not contain an HSN field, so it is not
-         * sent to the backend.
-         */
-
-        if (productName) {
-
-            items.push({
-
-                productName,
-
-                quantity,
-
-                price,
-
-                total
-
-            });
-
-        }
+        height: 180
 
     });
 
-
-    return items;
-
 }
 
 
-// ========================================
+// =====================================================
 // SAVE BILL
-// ========================================
+// =====================================================
 
 async function saveBill() {
 
@@ -653,143 +607,139 @@ async function saveBill() {
         );
 
 
-    message.textContent =
-        "Saving bill...";
+    message.textContent = "";
 
 
-    message.style.color =
-        "#2563eb";
+    const rows =
+        itemsBody.querySelectorAll("tr");
 
 
-    const customerName =
-        document.getElementById(
-            "customerName"
-        )?.value.trim() || "";
-
-
-    const customerPhone =
-        document.getElementById(
-            "customerPhone"
-        )?.value.trim() || "";
-
-
-    const vehicleNo =
-        document.getElementById(
-            "vehicleNo"
-        )?.value.trim() || "";
-
-
-    const items =
-        getBillItems();
-
-
-    // ========================================
-    // VALIDATION
-    // ========================================
-
-    if (items.length === 0) {
+    if (rows.length === 0) {
 
         message.textContent =
-            "Please add at least one product.";
-
-        message.style.color =
-            "#dc2626";
+            "Add at least one item.";
 
         return;
 
     }
 
 
-    for (const item of items) {
+    const items = [];
+
+
+    for (const row of rows) {
+
+        const productName =
+            row.querySelector(
+                ".product-name"
+            ).value.trim();
+
+
+        const quantity =
+            Number(
+                row.querySelector(
+                    ".quantity"
+                ).value
+            );
+
+
+        const price =
+            Number(
+                row.querySelector(
+                    ".price"
+                ).value
+            );
+
+
+        if (!productName) {
+
+            message.textContent =
+                "Enter a product name.";
+
+            return;
+
+        }
+
 
         if (
-            !item.quantity ||
-            item.quantity < 1
+            !quantity ||
+            quantity < 1
         ) {
 
             message.textContent =
                 "Quantity must be at least 1.";
 
-            message.style.color =
-                "#dc2626";
-
             return;
 
         }
 
 
-        if (item.price < 0) {
+        if (
+            price < 0 ||
+            isNaN(price)
+        ) {
 
             message.textContent =
-                "Price cannot be negative.";
-
-            message.style.color =
-                "#dc2626";
+                "Enter a valid price.";
 
             return;
 
         }
+
+
+        items.push({
+
+            productName,
+
+            quantity,
+
+            price
+
+        });
 
     }
 
 
-    const totals =
-        calculateTotal();
+    const calculation =
+        calculateBill();
 
 
-    // ========================================
-    // CREATE BILL DATA
-    // ========================================
-
-    const billData = {
+    const body = {
 
         shopId,
 
         customerName:
-            customerName ||
-            "Walk-in Customer",
+            document.getElementById(
+                "customerName"
+            ).value.trim(),
 
-        customerPhone,
+        customerPhone:
+            document.getElementById(
+                "customerPhone"
+            ).value.trim(),
 
         items,
 
-        subtotal:
-            Number(
-                totals.subtotal.toFixed(2)
-            ),
+        discount:
+            calculation.discount,
 
-        discount: 0,
+        gstRate:
+            calculation.gstRate,
 
-        /*
-         * Your backend Transaction model
-         * currently has only one GST number.
-         *
-         * We store the total GST amount here.
-         */
+        cgstRate:
+            calculation.cgstRate,
 
-        gst:
-            Number(
-                (
-                    totals.cgstAmount +
-                    totals.sgstAmount +
-                    totals.igstAmount
-                ).toFixed(2)
-            ),
+        sgstRate:
+            calculation.sgstRate,
 
-        total:
-            Number(
-                totals.grandTotal.toFixed(2)
-            ),
+        igstRate:
+            calculation.igstRate,
 
         paymentMethod:
-            "cash"
+            paymentMethod.value
 
     };
 
-
-    // ========================================
-    // SEND TO BACKEND
-    // ========================================
 
     try {
 
@@ -797,6 +747,7 @@ async function saveBill() {
             await fetch(
                 "http://localhost:5000/api/transactions",
                 {
+
                     method: "POST",
 
                     headers: {
@@ -810,178 +761,466 @@ async function saveBill() {
                     },
 
                     body:
-                        JSON.stringify(
-                            billData
-                        )
+                        JSON.stringify(body)
 
                 }
             );
 
 
-        let data;
-
-
-        try {
-
-            data =
-                await response.json();
-
-        } catch (jsonError) {
-
-            data = {};
-
-        }
+        const data =
+            await response.json();
 
 
         if (!response.ok) {
 
-            console.error(
-                "Save bill failed:",
-                data
-            );
-
-
             message.textContent =
                 data.message ||
                 "Failed to save bill.";
-
-            message.style.color =
-                "#dc2626";
 
             return;
 
         }
 
 
-        // ========================================
-        // SUCCESS
-        // ========================================
-
         message.textContent =
-            "Bill saved successfully!";
-
-        message.style.color =
-            "#16a34a";
+            "✓ Bill saved successfully.";
 
 
-        /*
-         * Give the user a moment to see the
-         * success message before redirecting.
-         */
-
-        setTimeout(() => {
-
-            window.location.href =
-                "transactions.html";
-
-        }, 1000);
+        // Prepare print data
+        preparePrintBill(
+            data.transaction
+        );
 
 
     } catch (error) {
 
-        console.error(
-            "Save bill error:",
-            error
-        );
-
+        console.error(error);
 
         message.textContent =
             "Unable to connect to server.";
-
-        message.style.color =
-            "#dc2626";
 
     }
 
 }
 
 
-// ========================================
-// PRINT BILL
-// ========================================
+// =====================================================
+// PREPARE PRINT BILL
+// =====================================================
+
+function preparePrintBill(transaction) {
+
+    document.getElementById(
+        "printShopName"
+    ).textContent =
+        shop.shopName;
+
+
+    document.getElementById(
+        "printShopAddress"
+    ).textContent =
+        shop.shopAddress;
+
+
+    document.getElementById(
+        "printShopPhone"
+    ).textContent =
+        shop.phone
+            ? `Phone: ${shop.phone}`
+            : "";
+
+
+    document.getElementById(
+        "printShopGST"
+    ).textContent =
+        shop.gstNumber
+            ? `GSTIN: ${shop.gstNumber}`
+            : "";
+
+
+    document.getElementById(
+        "printCustomer"
+    ).textContent =
+        transaction.customerName;
+
+
+    document.getElementById(
+        "printCustomerPhone"
+    ).textContent =
+        transaction.customerPhone ||
+        "-";
+
+
+    document.getElementById(
+        "printDate"
+    ).textContent =
+        new Date(
+            transaction.createdAt
+        ).toLocaleString();
+
+
+    const printItems =
+        document.getElementById(
+            "printItems"
+        );
+
+
+    printItems.innerHTML = "";
+
+
+    transaction.items.forEach(
+        (item, index) => {
+
+            const row =
+                document.createElement(
+                    "tr"
+                );
+
+
+            row.innerHTML = `
+
+                <td>
+                    ${index + 1}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        item.productName
+                    )}
+                </td>
+
+                <td>
+                    ${item.quantity}
+                </td>
+
+                <td>
+                    ${formatCurrency(
+                        item.price
+                    )}
+                </td>
+
+                <td>
+                    ${formatCurrency(
+                        item.total
+                    )}
+                </td>
+
+            `;
+
+
+            printItems.appendChild(row);
+
+        }
+    );
+
+
+    document.getElementById(
+        "printSubtotal"
+    ).textContent =
+        formatCurrency(
+            transaction.subtotal
+        );
+
+
+    document.getElementById(
+        "printDiscount"
+    ).textContent =
+        `${transaction.discount}%`;
+
+
+    document.getElementById(
+        "printCgst"
+    ).textContent =
+        formatCurrency(
+            transaction.cgstAmount
+        );
+
+
+    document.getElementById(
+        "printSgst"
+    ).textContent =
+        formatCurrency(
+            transaction.sgstAmount
+        );
+
+
+    document.getElementById(
+        "printIgst"
+    ).textContent =
+        formatCurrency(
+            transaction.igstAmount
+        );
+
+
+    document.getElementById(
+        "printTotal"
+    ).textContent =
+        formatCurrency(
+            transaction.total
+        );
+
+
+    document.getElementById(
+        "printPayment"
+    ).textContent =
+        transaction.paymentMethod
+            .toUpperCase();
+
+}
+
+
+// =====================================================
+// PRINT
+// =====================================================
 
 function printBill() {
 
-    calculateTotal();
+    if (!shop) {
+
+        alert(
+            "Shop information is still loading."
+        );
+
+        return;
+
+    }
+
+
+    prepareCurrentPrintBill();
 
     window.print();
 
 }
 
 
-// ========================================
-// GENERATE UPI QR CODE
-// ========================================
+// =====================================================
+// PREPARE CURRENT BILL FOR PRINT
+// =====================================================
 
-function generateQRCode(upiId) {
+function prepareCurrentPrintBill() {
 
-    const qrContainer =
+    const calculation =
+        calculateBill();
+
+
+    const customerName =
         document.getElementById(
-            "qrcode"
+            "customerName"
+        ).value.trim()
+        || "Walk-in Customer";
+
+
+    const customerPhone =
+        document.getElementById(
+            "customerPhone"
+        ).value.trim();
+
+
+    document.getElementById(
+        "printShopName"
+    ).textContent =
+        shop.shopName;
+
+
+    document.getElementById(
+        "printShopAddress"
+    ).textContent =
+        shop.shopAddress;
+
+
+    document.getElementById(
+        "printShopPhone"
+    ).textContent =
+        shop.phone
+            ? `Phone: ${shop.phone}`
+            : "";
+
+
+    document.getElementById(
+        "printShopGST"
+    ).textContent =
+        shop.gstNumber
+            ? `GSTIN: ${shop.gstNumber}`
+            : "";
+
+
+    document.getElementById(
+        "printCustomer"
+    ).textContent =
+        customerName;
+
+
+    document.getElementById(
+        "printCustomerPhone"
+    ).textContent =
+        customerPhone || "-";
+
+
+    document.getElementById(
+        "printDate"
+    ).textContent =
+        new Date().toLocaleString();
+
+
+    const printItems =
+        document.getElementById(
+            "printItems"
         );
 
 
-    if (!qrContainer) {
-        return;
-    }
+    printItems.innerHTML = "";
 
 
-    qrContainer.innerHTML = "";
+    const rows =
+        itemsBody.querySelectorAll("tr");
 
 
-    if (
-        typeof QRCode ===
-        "undefined"
-    ) {
+    rows.forEach(
+        (row, index) => {
 
-        console.warn(
-            "QRCode library not loaded."
-        );
-
-        return;
-
-    }
+            const name =
+                row.querySelector(
+                    ".product-name"
+                ).value;
 
 
-    if (!upiId) {
-
-        return;
-
-    }
-
-
-    /*
-     * Basic UPI payment QR.
-     *
-     * Amount is intentionally not fixed here.
-     * The QR represents the shop's UPI ID.
-     */
-
-    const upiUrl =
-        `upi://pay?pa=${encodeURIComponent(
-            upiId
-        )}&pn=${encodeURIComponent(
-            document.getElementById(
-                "shopName"
-            )?.textContent || "Shop"
-        )}&cu=INR`;
+            const quantity =
+                Number(
+                    row.querySelector(
+                        ".quantity"
+                    ).value
+                ) || 0;
 
 
-    new QRCode(
-        qrContainer,
-        {
-            text: upiUrl,
-            width: 140,
-            height: 140
+            const price =
+                Number(
+                    row.querySelector(
+                        ".price"
+                    ).value
+                ) || 0;
+
+
+            const total =
+                quantity * price;
+
+
+            printItems.innerHTML += `
+
+                <tr>
+
+                    <td>
+                        ${index + 1}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(name)}
+                    </td>
+
+                    <td>
+                        ${quantity}
+                    </td>
+
+                    <td>
+                        ${formatCurrency(price)}
+                    </td>
+
+                    <td>
+                        ${formatCurrency(total)}
+                    </td>
+
+                </tr>
+
+            `;
+
         }
+    );
+
+
+    document.getElementById(
+        "printSubtotal"
+    ).textContent =
+        formatCurrency(
+            calculation.subtotal
+        );
+
+
+    document.getElementById(
+        "printDiscount"
+    ).textContent =
+        `${calculation.discount}%`;
+
+
+    document.getElementById(
+        "printCgst"
+    ).textContent =
+        formatCurrency(
+            calculation.cgstAmount
+        );
+
+
+    document.getElementById(
+        "printSgst"
+    ).textContent =
+        formatCurrency(
+            calculation.sgstAmount
+        );
+
+
+    document.getElementById(
+        "printIgst"
+    ).textContent =
+        formatCurrency(
+            calculation.igstAmount
+        );
+
+
+    document.getElementById(
+        "printTotal"
+    ).textContent =
+        formatCurrency(
+            calculation.grandTotal
+        );
+
+
+    document.getElementById(
+        "printPayment"
+    ).textContent =
+        paymentMethod.value.toUpperCase();
+
+}
+
+
+// =====================================================
+// UTILITIES
+// =====================================================
+
+function formatCurrency(value) {
+
+    return new Intl.NumberFormat(
+        "en-IN",
+        {
+            style: "currency",
+            currency: "INR"
+        }
+    ).format(
+        Number(value) || 0
     );
 
 }
 
 
-// ========================================
-// BACK TO SHOP DASHBOARD
-// ========================================
+function escapeHtml(value) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent =
+        value || "";
+
+    return div.innerHTML;
+
+}
+
 
 function goBack() {
 
@@ -991,198 +1230,62 @@ function goBack() {
 }
 
 
-// ========================================
-// NUMBER TO WORDS
-// ========================================
+// =====================================================
+// EVENTS
+// =====================================================
 
-function numberToWords(number) {
-
-    number =
-        Number(number) || 0;
-
-
-    if (number === 0) {
-
-        return "Zero";
-
-    }
-
-
-    const ones = [
-
-        "",
-        "One",
-        "Two",
-        "Three",
-        "Four",
-        "Five",
-        "Six",
-        "Seven",
-        "Eight",
-        "Nine",
-        "Ten",
-        "Eleven",
-        "Twelve",
-        "Thirteen",
-        "Fourteen",
-        "Fifteen",
-        "Sixteen",
-        "Seventeen",
-        "Eighteen",
-        "Nineteen"
-
-    ];
-
-
-    const tens = [
-
-        "",
-        "",
-        "Twenty",
-        "Thirty",
-        "Forty",
-        "Fifty",
-        "Sixty",
-        "Seventy",
-        "Eighty",
-        "Ninety"
-
-    ];
-
-
-    function convertLessThanThousand(num) {
-
-        let result = "";
-
-
-        if (num >= 100) {
-
-            result +=
-                ones[
-                    Math.floor(
-                        num / 100
-                    )
-                ] +
-                " Hundred ";
-
-            num %= 100;
-
-        }
-
-
-        if (num >= 20) {
-
-            result +=
-                tens[
-                    Math.floor(
-                        num / 10
-                    )
-                ];
-
-            if (num % 10 !== 0) {
-
-                result +=
-                    " " +
-                    ones[
-                        num % 10
-                    ];
-
-            }
-
-        } else if (num > 0) {
-
-            result +=
-                ones[num];
-
-        }
-
-
-        return result.trim();
-
-    }
-
-
-    let result = "";
-
-
-    if (number >= 10000000) {
-
-        result +=
-            convertLessThanThousand(
-                Math.floor(
-                    number / 10000000
-                )
-            ) +
-            " Crore ";
-
-        number %=
-            10000000;
-
-    }
-
-
-    if (number >= 100000) {
-
-        result +=
-            convertLessThanThousand(
-                Math.floor(
-                    number / 100000
-                )
-            ) +
-            " Lakh ";
-
-        number %=
-            100000;
-
-    }
-
-
-    if (number >= 1000) {
-
-        result +=
-            convertLessThanThousand(
-                Math.floor(
-                    number / 1000
-                )
-            ) +
-            " Thousand ";
-
-        number %=
-            1000;
-
-    }
-
-
-    if (number > 0) {
-
-        result +=
-            convertLessThanThousand(
-                number
-            );
-
-    }
-
-
-    return result.trim();
-
-}
-
-
-// ========================================
-// INITIALIZE
-// ========================================
-
-document.addEventListener(
-    "DOMContentLoaded",
+discountInput.addEventListener(
+    "input",
     () => {
 
-        setBillDateTime();
+        calculateBill();
 
-        loadShop();
-
-        calculateTotal();
+        if (
+            paymentMethod.value === "upi"
+        ) {
+            generateQRCode();
+        }
 
     }
 );
 
 
+gstRateInput.addEventListener(
+    "input",
+    () => {
+
+        calculateBill();
+
+        if (
+            paymentMethod.value === "upi"
+        ) {
+            generateQRCode();
+        }
+
+    }
+);
+
+
+gstType.addEventListener(
+    "change",
+    () => {
+
+        calculateBill();
+
+    }
+);
+
+
+// =====================================================
+// INITIAL LOAD
+// =====================================================
+
+document.getElementById(
+    "billDate"
+).textContent =
+    new Date().toLocaleString();
+
+
+addItem();
+
+loadShop();

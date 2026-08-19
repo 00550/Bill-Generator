@@ -1,11 +1,13 @@
-
 // ==================================================
 // BILLING DESK - SIGN UP
-// JavaScript
 // ==================================================
 
+console.log("SIGNUP.JS LOADED - REGISTER VERSION");
 
-// ================= GET ELEMENTS =================
+
+// ==================================================
+// GET ELEMENTS
+// ==================================================
 
 const signupForm = document.getElementById("signupForm");
 
@@ -13,9 +15,7 @@ const nameInput = document.getElementById("name");
 const emailInput = document.getElementById("email");
 const phoneInput = document.getElementById("phone");
 
-const passwordInput =
-    document.getElementById("password");
-
+const passwordInput = document.getElementById("password");
 const confirmPasswordInput =
     document.getElementById("confirmPassword");
 
@@ -29,7 +29,22 @@ const successMessage =
     document.getElementById("successMessage");
 
 
-// ================= SHOW / HIDE PASSWORD =================
+// ==================================================
+// CHECK ELEMENTS
+// ==================================================
+
+console.log("Signup form:", signupForm);
+console.log("Name input:", nameInput);
+console.log("Email input:", emailInput);
+console.log("Phone input:", phoneInput);
+console.log("Password input:", passwordInput);
+console.log("Confirm password:", confirmPasswordInput);
+console.log("Terms:", termsCheckbox);
+
+
+// ==================================================
+// SHOW / HIDE PASSWORD
+// ==================================================
 
 const togglePassword =
     document.getElementById("togglePassword");
@@ -41,13 +56,11 @@ if (togglePassword) {
         if (passwordInput.type === "password") {
 
             passwordInput.type = "text";
-
             togglePassword.textContent = "Hide";
 
         } else {
 
             passwordInput.type = "password";
-
             togglePassword.textContent = "Show";
 
         }
@@ -57,281 +70,438 @@ if (togglePassword) {
 }
 
 
-// ================= SHOW / HIDE CONFIRM PASSWORD =================
+// ==================================================
+// SHOW / HIDE CONFIRM PASSWORD
+// ==================================================
 
 const toggleConfirmPassword =
     document.getElementById("toggleConfirmPassword");
 
 if (toggleConfirmPassword) {
 
-    toggleConfirmPassword.addEventListener("click", function () {
+    toggleConfirmPassword.addEventListener(
+        "click",
+        function () {
 
-        if (confirmPasswordInput.type === "password") {
+            if (
+                confirmPasswordInput.type ===
+                "password"
+            ) {
 
-            confirmPasswordInput.type = "text";
+                confirmPasswordInput.type = "text";
+                toggleConfirmPassword.textContent =
+                    "Hide";
 
-            toggleConfirmPassword.textContent = "Hide";
+            } else {
 
-        } else {
+                confirmPasswordInput.type = "password";
+                toggleConfirmPassword.textContent =
+                    "Show";
 
-            confirmPasswordInput.type = "password";
-
-            toggleConfirmPassword.textContent = "Show";
+            }
 
         }
-
-    });
+    );
 
 }
 
 
-// ================= PHONE VALIDATION =================
+// ==================================================
+// PHONE VALIDATION
+// ==================================================
 
-// Allow only numbers
+if (phoneInput) {
 
-phoneInput.addEventListener("input", function () {
+    phoneInput.addEventListener(
+        "input",
+        function () {
 
-    phoneInput.value =
-        phoneInput.value.replace(/\D/g, "");
+            phoneInput.value =
+                phoneInput.value.replace(/\D/g, "");
 
-});
+            if (phoneInput.value.length > 10) {
 
+                phoneInput.value =
+                    phoneInput.value.substring(0, 10);
 
-// ================= FORM SUBMIT =================
+            }
 
-signupForm.addEventListener(
-    "submit",
-    async function (event) {
-
-        // Stop normal form submission
-        event.preventDefault();
-
-
-        // ================= CLEAR PREVIOUS MESSAGES =================
-
-        errorMessage.style.display = "none";
-        errorMessage.textContent = "";
-
-        successMessage.style.display = "none";
-        successMessage.textContent = "";
-
-
-        // ================= GET FORM VALUES =================
-
-        const name =
-            nameInput.value.trim();
-
-        const email =
-            emailInput.value.trim();
-
-        const phone =
-            phoneInput.value.trim();
-
-        const password =
-            passwordInput.value;
-
-        const confirmPassword =
-            confirmPasswordInput.value;
-
-
-        // ================= VALIDATION =================
-
-        // Name validation
-
-        if (name.length < 3) {
-
-            showError(
-                "Please enter your full name."
-            );
-
-            nameInput.focus();
-
-            return;
         }
+    );
+
+}
 
 
-        // Email validation
+// ==================================================
+// FORM SUBMIT
+// ==================================================
 
-        if (!isValidEmail(email)) {
+if (signupForm) {
 
-            showError(
-                "Please enter a valid email address."
-            );
+    signupForm.addEventListener(
+        "submit",
+        async function (event) {
 
-            emailInput.focus();
+            event.preventDefault();
 
-            return;
-        }
-
-
-        // Phone validation
-
-        if (phone.length !== 10) {
-
-            showError(
-                "Please enter a valid 10-digit phone number."
-            );
-
-            phoneInput.focus();
-
-            return;
-        }
+            console.log("SIGNUP FORM SUBMITTED");
 
 
-        // Password validation
+            // ==================================================
+            // CLEAR MESSAGES
+            // ==================================================
 
-        if (password.length < 6) {
+            errorMessage.style.display = "none";
+            errorMessage.textContent = "";
 
-            showError(
-                "Password must contain at least 6 characters."
-            );
-
-            passwordInput.focus();
-
-            return;
-        }
+            successMessage.style.display = "none";
+            successMessage.textContent = "";
 
 
-        // Confirm password
+            // ==================================================
+            // GET VALUES
+            // ==================================================
 
-        if (password !== confirmPassword) {
+            const name =
+                nameInput.value.trim();
 
-            showError(
-                "Passwords do not match."
-            );
+            const email =
+                emailInput.value.trim();
 
-            confirmPasswordInput.focus();
+            const phone =
+                phoneInput.value.trim();
 
-            return;
-        }
+            const password =
+                passwordInput.value;
 
-
-        // Terms and conditions
-
-        if (!termsCheckbox.checked) {
-
-            showError(
-                "Please accept the Terms & Conditions."
-            );
-
-            return;
-        }
+            const confirmPassword =
+                confirmPasswordInput.value;
 
 
-        // ================= SEND DATA TO BACKEND =================
-
-        try {
-
-            // Show temporary message
-
-            successMessage.textContent =
-                "Creating your account...";
-
-            successMessage.style.display = "block";
+            console.log("Name:", name);
+            console.log("Email:", email);
+            console.log("Phone:", phone);
 
 
-            // Send signup request to Node.js server
+            // ==================================================
+            // VALIDATE NAME
+            // ==================================================
 
-            const response = await fetch(
-                "http://localhost:5000/api/auth/signup",
-                {
+            if (name.length < 3) {
 
-                    method: "POST",
-
-                    headers: {
-
-                        "Content-Type":
-                            "application/json"
-
-                    },
-
-                    body: JSON.stringify({
-
-                        name: name,
-
-                        email: email,
-
-                        phone: phone,
-
-                        password: password
-
-                    })
-
-                }
-            );
-
-
-            // ================= GET SERVER RESPONSE =================
-
-            const data =
-                await response.json();
-
-
-            // ================= CHECK RESPONSE =================
-
-            if (!response.ok) {
-
-                throw new Error(
-                    data.message ||
-                    "Unable to create account."
+                showError(
+                    "Please enter your full name."
                 );
+
+                nameInput.focus();
+
+                return;
 
             }
 
 
-            // ================= ACCOUNT CREATED =================
+            // ==================================================
+            // VALIDATE EMAIL
+            // ==================================================
+
+            if (!isValidEmail(email)) {
+
+                showError(
+                    "Please enter a valid email address."
+                );
+
+                emailInput.focus();
+
+                return;
+
+            }
+
+
+            // ==================================================
+            // VALIDATE PHONE
+            // ==================================================
+
+            if (phone.length !== 10) {
+
+                showError(
+                    "Please enter a valid 10-digit phone number."
+                );
+
+                phoneInput.focus();
+
+                return;
+
+            }
+
+
+            // ==================================================
+            // VALIDATE PASSWORD
+            // ==================================================
+
+            if (password.length < 6) {
+
+                showError(
+                    "Password must contain at least 6 characters."
+                );
+
+                passwordInput.focus();
+
+                return;
+
+            }
+
+
+            // ==================================================
+            // CONFIRM PASSWORD
+            // ==================================================
+
+            if (password !== confirmPassword) {
+
+                showError(
+                    "Passwords do not match."
+                );
+
+                confirmPasswordInput.focus();
+
+                return;
+
+            }
+
+
+            // ==================================================
+            // TERMS
+            // ==================================================
+
+            if (!termsCheckbox.checked) {
+
+                showError(
+                    "Please accept the Terms & Conditions."
+                );
+
+                return;
+
+            }
+
+
+            // ==================================================
+            // SUBMIT BUTTON
+            // ==================================================
+
+            const submitButton =
+                signupForm.querySelector(
+                    ".signup-submit"
+                );
+
+            if (submitButton) {
+
+                submitButton.disabled = true;
+
+                submitButton.textContent =
+                    "Creating Account...";
+
+            }
+
+
+            // ==================================================
+            // LOADING MESSAGE
+            // ==================================================
 
             successMessage.textContent =
-                "Account created successfully!";
-
-            successMessage.style.display = "block";
-
-
-            // Clear form
-
-            signupForm.reset();
-
-
-            // ================= REDIRECT TO LOGIN =================
-
-            setTimeout(function () {
-
-                window.location.href =
-                    "login.html";
-
-            }, 1500);
-
-
-        } catch (error) {
-
-            // Hide success message
+                "Creating your account...";
 
             successMessage.style.display =
-                "none";
+                "block";
 
 
-            // Show error
+            // ==================================================
+            // SEND REQUEST
+            // ==================================================
 
-            console.error(
-                "Signup Error:",
-                error
-            );
+            try {
+
+                const API_URL =
+                    "http://localhost:5000/api/auth/register";
 
 
-            showError(
-                error.message ||
-                "Unable to connect to server."
-            );
+                console.log(
+                    "Sending request to:",
+                    API_URL
+                );
+
+
+                const response =
+                    await fetch(
+                        API_URL,
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+                                name: name,
+                                email: email,
+                                phone: phone,
+                                password: password
+                            })
+                        }
+                    );
+
+
+                console.log(
+                    "Response status:",
+                    response.status
+                );
+
+
+                // ==================================================
+                // READ RESPONSE
+                // ==================================================
+
+                const contentType =
+                    response.headers.get(
+                        "content-type"
+                    ) || "";
+
+
+                let data;
+
+
+                if (
+                    contentType.includes(
+                        "application/json"
+                    )
+                ) {
+
+                    data =
+                        await response.json();
+
+                } else {
+
+                    const text =
+                        await response.text();
+
+                    console.error(
+                        "Non-JSON response:",
+                        text
+                    );
+
+                    throw new Error(
+                        "Server returned a non-JSON response. HTTP status: " +
+                        response.status
+                    );
+
+                }
+
+
+                console.log(
+                    "Server response:",
+                    data
+                );
+
+
+                // ==================================================
+                // SERVER ERROR
+                // ==================================================
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.message ||
+                        "Unable to create account."
+                    );
+
+                }
+
+
+                // ==================================================
+                // SUCCESS
+                // ==================================================
+
+                successMessage.textContent =
+                    data.message ||
+                    "Account created successfully!";
+
+                successMessage.style.display =
+                    "block";
+
+
+                console.log(
+                    "ACCOUNT CREATED SUCCESSFULLY"
+                );
+
+
+                // Clear form
+
+                signupForm.reset();
+
+
+                // ==================================================
+                // REDIRECT TO LOGIN
+                // ==================================================
+
+                setTimeout(
+                    function () {
+
+                        window.location.href =
+                            "login.html";
+
+                    },
+                    1500
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Signup Error:",
+                    error
+                );
+
+
+                successMessage.style.display =
+                    "none";
+
+
+                showError(
+                    error.message ||
+                    "Unable to connect to server."
+                );
+
+
+                // ==================================================
+                // ENABLE BUTTON
+                // ==================================================
+
+                if (submitButton) {
+
+                    submitButton.disabled =
+                        false;
+
+                    submitButton.textContent =
+                        "Create Account";
+
+                }
+
+            }
 
         }
+    );
 
-    }
-);
+}
 
 
-// ================= ERROR FUNCTION =================
+// ==================================================
+// SHOW ERROR
+// ==================================================
 
 function showError(message) {
+
+    if (!errorMessage) {
+        return;
+    }
 
     errorMessage.textContent =
         message;
@@ -342,7 +512,9 @@ function showError(message) {
 }
 
 
-// ================= EMAIL VALIDATION =================
+// ==================================================
+// EMAIL VALIDATION
+// ==================================================
 
 function isValidEmail(email) {
 
@@ -354,9 +526,10 @@ function isValidEmail(email) {
 }
 
 
-// ================= PAGE LOADED =================
+// ==================================================
+// PAGE LOADED
+// ==================================================
 
 console.log(
     "Billing Desk signup page loaded successfully."
 );
-

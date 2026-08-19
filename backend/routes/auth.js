@@ -8,8 +8,21 @@ const router = express.Router();
 
 
 // ========================================
-// REGISTER OWNER
+// TEST AUTH ROUTE
 // ========================================
+
+router.get("/test", (req, res) => {
+
+    res.json({
+        message: "Auth route is working"
+    });
+
+});
+
+// =====================================================
+// REGISTER OWNER
+// POST /api/auth/register
+// =====================================================
 
 router.post("/register", async (req, res) => {
 
@@ -23,35 +36,90 @@ router.post("/register", async (req, res) => {
         } = req.body;
 
 
+        // ==========================================
+        // VALIDATION
+        // ==========================================
+
         if (!name || !email || !password) {
+
             return res.status(400).json({
                 message: "Name, email and password are required"
             });
+
         }
 
 
+        const trimmedName = name.trim();
+        const normalizedEmail = email.trim().toLowerCase();
+        const trimmedPhone = phone
+            ? phone.trim()
+            : "";
+
+
+        if (!trimmedName) {
+
+            return res.status(400).json({
+                message: "Name cannot be empty"
+            });
+
+        }
+
+
+        if (!normalizedEmail) {
+
+            return res.status(400).json({
+                message: "Email cannot be empty"
+            });
+
+        }
+
+
+        if (password.length < 6) {
+
+            return res.status(400).json({
+                message: "Password must be at least 6 characters"
+            });
+
+        }
+
+
+        // ==========================================
+        // CHECK EMAIL
+        // ==========================================
+
         const existingUser = await User.findOne({
-            email: email.toLowerCase()
+            email: normalizedEmail
         });
 
 
         if (existingUser) {
+
             return res.status(400).json({
                 message: "Email already registered"
             });
+
         }
 
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+        // ==========================================
+        // HASH PASSWORD
+        // ==========================================
 
+        const hashedPassword =
+            await bcrypt.hash(password, 10);
+
+
+        // ==========================================
+        // CREATE USER
+        // ==========================================
 
         const user = await User.create({
 
-            name,
+            name: trimmedName,
 
-            email: email.toLowerCase(),
+            email: normalizedEmail,
 
-            phone,
+            phone: trimmedPhone,
 
             password: hashedPassword,
 
@@ -62,16 +130,27 @@ router.post("/register", async (req, res) => {
         });
 
 
-        res.status(201).json({
+        // ==========================================
+        // RESPONSE
+        // ==========================================
 
-            message: "Owner account created successfully",
+        return res.status(201).json({
+
+            message:
+                "Owner account created successfully",
 
             user: {
+
                 id: user._id,
+
                 name: user.name,
+
                 email: user.email,
+
                 phone: user.phone,
+
                 role: user.role
+
             }
 
         });
@@ -79,10 +158,61 @@ router.post("/register", async (req, res) => {
 
     } catch (error) {
 
-        console.error("Registration error:", error);
+        console.error(
+            "Registration error:",
+            error
+        );
 
-        res.status(500).json({
-            message: "Server error"
+
+        // ==========================================
+        // DUPLICATE EMAIL
+        // ==========================================
+
+        if (error.code === 11000) {
+
+            return res.status(400).json({
+
+                message:
+                    "Email already registered"
+
+            });
+
+        }
+
+
+        // ==========================================
+        // MONGOOSE VALIDATION ERROR
+        // ==========================================
+
+        if (error.name === "ValidationError") {
+
+            const messages =
+                Object.values(error.errors)
+                    .map(err => err.message);
+
+
+            return res.status(400).json({
+
+                message:
+                    messages.join(", ")
+
+            });
+
+        }
+
+
+        // ==========================================
+        // SERVER ERROR
+        // ==========================================
+
+        return res.status(500).json({
+
+            message:
+                "Failed to create account",
+
+            error:
+                error.message
+
         });
 
     }
@@ -90,9 +220,10 @@ router.post("/register", async (req, res) => {
 });
 
 
-// ========================================
+// =====================================================
 // LOGIN
-// ========================================
+// POST /api/auth/login
+// =====================================================
 
 router.post("/login", async (req, res) => {
 
@@ -104,82 +235,162 @@ router.post("/login", async (req, res) => {
         } = req.body;
 
 
+        // ==========================================
+        // VALIDATION
+        // ==========================================
+
         if (!email || !password) {
 
             return res.status(400).json({
-                message: "Email and password are required"
+
+                message:
+                    "Email and password are required"
+
             });
 
         }
 
 
-        const user = await User.findOne({
-            email: email.toLowerCase()
-        });
+        const normalizedEmail =
+            email.trim().toLowerCase();
+
+
+        // ==========================================
+        // FIND USER
+        // ==========================================
+
+        const user =
+            await User.findOne({
+
+                email:
+                    normalizedEmail
+
+            });
 
 
         if (!user) {
 
             return res.status(401).json({
-                message: "Invalid email or password"
+
+                message:
+                    "Invalid email or password"
+
             });
 
         }
 
+
+        // ==========================================
+        // CHECK STATUS
+        // ==========================================
 
         if (user.status !== "active") {
 
             return res.status(403).json({
-                message: "Account is inactive"
+
+                message:
+                    "Account is inactive"
+
             });
 
         }
 
 
-        const passwordMatch = await bcrypt.compare(
-            password,
-            user.password
-        );
+        // ==========================================
+        // CHECK PASSWORD
+        // ==========================================
+
+        const passwordMatch =
+            await bcrypt.compare(
+                password,
+                user.password
+            );
 
 
         if (!passwordMatch) {
 
             return res.status(401).json({
-                message: "Invalid email or password"
+
+                message:
+                    "Invalid email or password"
+
             });
 
         }
 
 
-        const token = jwt.sign(
-    {
-        userId: user._id,
-        role: user.role
-    },
-    process.env.JWT_SECRET,
-    {
-        expiresIn: "7d"
-    }
-);
+        // ==========================================
+        // JWT SECRET CHECK
+        // ==========================================
+
+        if (!process.env.JWT_SECRET) {
+
+            console.error(
+                "JWT_SECRET is missing from .env"
+            );
+
+            return res.status(500).json({
+
+                message:
+                    "JWT configuration is missing"
+
+            });
+
+        }
 
 
-        res.json({
+        // ==========================================
+        // CREATE TOKEN
+        // ==========================================
 
-            message: "Login successful",
+        const token =
+            jwt.sign(
+
+                {
+                    userId:
+                        user._id,
+
+                    role:
+                        user.role
+                },
+
+                process.env.JWT_SECRET,
+
+                {
+                    expiresIn:
+                        "7d"
+                }
+
+            );
+
+
+        // ==========================================
+        // RESPONSE
+        // ==========================================
+
+        return res.json({
+
+            message:
+                "Login successful",
 
             token,
 
             user: {
 
-                id: user._id,
+                id:
+                    user._id,
 
-                name: user.name,
+                name:
+                    user.name,
 
-                email: user.email,
+                email:
+                    user.email,
 
-                phone: user.phone,
+                phone:
+                    user.phone,
 
-                role: user.role
+                role:
+                    user.role
 
             }
 
@@ -188,10 +399,20 @@ router.post("/login", async (req, res) => {
 
     } catch (error) {
 
-        console.error("Login error:", error);
+        console.error(
+            "Login error:",
+            error
+        );
 
-        res.status(500).json({
-            message: "Server error"
+
+        return res.status(500).json({
+
+            message:
+                "Failed to login",
+
+            error:
+                error.message
+
         });
 
     }

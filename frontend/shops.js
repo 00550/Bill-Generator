@@ -1,11 +1,10 @@
-const token = localStorage.getItem("token");
-
-
 // ========================================
-// CHECK LOGIN
+// AUTHENTICATION
 // ========================================
 
-if (!token) {
+const shopsToken = localStorage.getItem("token");
+
+if (!shopsToken) {
     window.location.href = "login.html";
 }
 
@@ -30,14 +29,36 @@ async function loadShops() {
                 method: "GET",
 
                 headers: {
-                    "Authorization": `Bearer ${token}`
+                    "Authorization": `Bearer ${shopsToken}`,
+                    "Content-Type": "application/json"
                 }
             }
         );
 
-
         const data = await response.json();
 
+        console.log("SHOPS STATUS:", response.status);
+        console.log("SHOPS RESPONSE:", data);
+
+
+        // ========================================
+        // AUTH ERROR
+        // ========================================
+
+        if (response.status === 401) {
+
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+
+            window.location.href = "login.html";
+
+            return;
+        }
+
+
+        // ========================================
+        // OTHER ERROR
+        // ========================================
 
         if (!response.ok) {
 
@@ -45,72 +66,102 @@ async function loadShops() {
                 data.message || "Failed to load shops";
 
             return;
-
         }
 
 
-        if (data.shops.length === 0) {
+        // ========================================
+        // NO SHOPS
+        // ========================================
+
+        if (!data.shops || data.shops.length === 0) {
 
             container.innerHTML = `
-                <p>You don't have any shops yet.</p>
+                <div class="empty-shop">
 
-                <button onclick="addShop()">
-                    Add Your First Shop
-                </button>
+                    <h3>No Shops Found</h3>
+
+                    <p>
+                        You haven't added a shop yet.
+                    </p>
+
+                    <button onclick="addShop()">
+                        Add Your First Shop
+                    </button>
+
+                </div>
             `;
 
             return;
-
         }
 
 
-        container.innerHTML = "";
+        // ========================================
+        // DISPLAY SHOPS
+        // ========================================
 
+        container.innerHTML = "";
 
         data.shops.forEach((shop) => {
 
-            const shopCard = document.createElement("div");
+            const shopCard =
+                document.createElement("div");
+
+            // IMPORTANT
+            shopCard.className = "shop-card";
+
 
             shopCard.innerHTML = `
 
-                <hr>
-
-                <h3>${shop.shopName}</h3>
+                <h3>
+                    ${escapeHTML(shop.shopName)}
+                </h3>
 
                 <p>
                     <strong>Address:</strong>
-                    ${shop.shopAddress}
+                    ${escapeHTML(shop.shopAddress)}
                 </p>
 
                 <p>
                     <strong>Phone:</strong>
-                    ${shop.phone || "Not provided"}
+                    ${escapeHTML(shop.phone || "Not provided")}
                 </p>
 
                 <p>
                     <strong>Email:</strong>
-                    ${shop.email || "Not provided"}
+                    ${escapeHTML(shop.email || "Not provided")}
                 </p>
 
                 <p>
                     <strong>GST:</strong>
-                    ${shop.gstNumber || "Not provided"}
+                    ${escapeHTML(shop.gstNumber || "Not provided")}
                 </p>
 
                 <p>
                     <strong>Status:</strong>
-                    ${shop.status}
+                    ${escapeHTML(shop.status || "active")}
                 </p>
 
-                <button onclick="openShop('${shop._id}')">
-                    Open Shop
-                </button>
+                <div class="shop-actions">
 
-                <button onclick="editShop('${shop._id}')">
-                    Edit
-                </button>
+                    <button
+                        type="button"
+                        class="open-shop-btn"
+                        onclick="openShop('${shop._id}')"
+                    >
+                        Open Shop
+                    </button>
 
+                    <button
+                        type="button"
+                        class="edit-shop-btn"
+                        onclick="editShop('${shop._id}')"
+                    >
+                        Edit
+                    </button>
+
+                </div>
             `;
+
 
             container.appendChild(shopCard);
 
@@ -119,7 +170,10 @@ async function loadShops() {
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "Load shops error:",
+            error
+        );
 
         message.textContent =
             "Unable to connect to server.";
@@ -135,12 +189,38 @@ async function loadShops() {
 
 function openShop(shopId) {
 
+    if (!shopId) {
+
+        console.error(
+            "No shop ID received"
+        );
+
+        return;
+    }
+
+
+    console.log(
+        "SELECTED SHOP:",
+        shopId
+    );
+
+
+    // Save selected shop
     localStorage.setItem(
         "selectedShopId",
         shopId
     );
 
-    window.location.href = "shop-dashboard.html";
+
+    console.log(
+        "SAVED SHOP:",
+        localStorage.getItem("selectedShopId")
+    );
+
+
+    // Go to shop dashboard
+    window.location.href =
+        "shop-dashboard.html";
 
 }
 
@@ -151,13 +231,17 @@ function openShop(shopId) {
 
 function editShop(shopId) {
 
+    if (!shopId) {
+        return;
+    }
+
     localStorage.setItem(
         "editShopId",
         shopId
     );
 
-    window.location.href = "edit-shop.html";
-
+    window.location.href =
+        "edit-shop.html";
 }
 
 
@@ -167,13 +251,14 @@ function editShop(shopId) {
 
 function addShop() {
 
-    window.location.href = "add-shop.html";
+    window.location.href =
+        "add-shop.html";
 
 }
 
 
 // ========================================
-// DASHBOARD
+// BACK TO OWNER DASHBOARD
 // ========================================
 
 function goDashboard() {
@@ -185,7 +270,23 @@ function goDashboard() {
 
 
 // ========================================
-// LOAD WHEN PAGE OPENS
+// BASIC HTML ESCAPE
+// ========================================
+
+function escapeHTML(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+// ========================================
+// LOAD PAGE
 // ========================================
 
 loadShops();

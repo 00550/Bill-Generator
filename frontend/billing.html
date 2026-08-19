@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,538 +5,521 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Billing Desk - Create Bill</title>
+    <title>Create Bill - Billing Desk</title>
 
     <link rel="stylesheet" href="billing.css">
+
+    <!-- QR Code library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 
 <body>
 
-<div class="invoice">
+<header class="page-header">
 
-    <!-- SHOP HEADER -->
-    <div class="shop-header">
-
-        <h1 id="shopName">
-            Loading Shop...
-        </h1>
-
-        <p id="shopAddress">
-            Loading address...
-        </p>
-
-        <p>
-            Mobile:
-            <span id="shopPhone">-</span>
-            |
-            GSTIN:
-            <span id="shopGST">-</span>
-        </p>
-
+    <div>
+        <h1 id="shopName">Loading Shop...</h1>
+        <p id="shopDetails">Loading shop details...</p>
     </div>
 
+    <button class="back-btn" onclick="goBack()">
+        ← Shop Dashboard
+    </button>
 
-    <!-- CUSTOMER / BILL INFORMATION -->
-    <div class="bill-info">
+</header>
 
-        <div>
 
-            <div class="info-row">
+<main class="billing-container">
 
-                <span class="info-label">
-                    Customer Name:
-                </span>
+    <!-- =====================================
+         BILL INFORMATION
+    ====================================== -->
+
+    <section class="card">
+
+        <div class="section-title">
+            <h2>New Bill</h2>
+
+            <span id="billDate"></span>
+        </div>
+
+
+        <div class="form-grid">
+
+            <div class="form-group">
+
+                <label for="customerName">
+                    Customer Name
+                </label>
 
                 <input
                     type="text"
                     id="customerName"
-                    class="input-line"
-                    placeholder="Customer name"
+                    placeholder="Walk-in Customer"
                 >
 
             </div>
 
 
-            <div class="info-row">
+            <div class="form-group">
 
-                <span class="info-label">
-                    Mobile:
-                </span>
+                <label for="customerPhone">
+                    Customer Phone
+                </label>
 
                 <input
-                    type="text"
+                    type="tel"
                     id="customerPhone"
-                    class="input-line"
-                    placeholder="Mobile number"
+                    placeholder="Enter phone number"
                 >
 
             </div>
 
         </div>
 
+    </section>
 
-        <div>
 
-            <div class="info-row">
+    <!-- =====================================
+         ITEMS
+    ====================================== -->
 
-                <span class="info-label">
-                    Vehicle No:
-                </span>
+    <section class="card">
 
-                <input
-                    type="text"
-                    id="vehicleNo"
-                    class="input-line"
-                    placeholder="Vehicle number"
-                >
+        <div class="section-title">
 
+            <div>
+                <h2>Bill Items</h2>
+                <p>Add products to this bill</p>
             </div>
 
-
-            <div class="info-row">
-
-                <span class="info-label">
-                    Date & Time:
-                </span>
-
-                <span id="billDateTime">
-                    -
-                </span>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- BILL ITEMS -->
-    <table class="bill-table">
-
-        <thead>
-
-            <tr>
-
-                <th>Sl<br>No</th>
-                <th>Description</th>
-                <th>HSN</th>
-                <th>Qty</th>
-                <th>Rate</th>
-                <th>Discount</th>
-                <th>Amount</th>
-                <th class="remove-column">
-                    Action
-                </th>
-
-            </tr>
-
-        </thead>
-
-
-        <tbody id="itemsContainer">
-
-            <tr class="bill-item">
-
-                <td class="serial">
-                    1
-                </td>
-
-                <td>
-
-                    <input
-                        type="text"
-                        class="productName description-input"
-                        placeholder="Product name"
-                    >
-
-                </td>
-
-                <td>
-
-                    <input
-                        type="text"
-                        class="hsn"
-                        placeholder="HSN"
-                    >
-
-                </td>
-
-                <td>
-
-                    <input
-                        type="number"
-                        class="quantity"
-                        value="1"
-                        min="1"
-                        oninput="calculateTotal()"
-                    >
-
-                </td>
-
-                <td>
-
-                    <input
-                        type="number"
-                        class="price"
-                        value="0"
-                        min="0"
-                        step="0.01"
-                        oninput="calculateTotal()"
-                    >
-
-                </td>
-
-                <td>
-
-                    <input
-                        type="number"
-                        class="discount"
-                        value="0"
-                        min="0"
-                        step="0.01"
-                        oninput="calculateTotal()"
-                    >
-
-                </td>
-
-                <td class="amount">
-                    ₹0.00
-                </td>
-
-                <td class="remove-column">
-
-                    <button
-                        type="button"
-                        class="remove-btn"
-                        onclick="removeItem(this)"
-                    >
-                        X
-                    </button>
-
-                </td>
-
-            </tr>
-
-        </tbody>
-
-    </table>
-
-
-    <!-- BUTTONS -->
-    <div class="buttons">
-
-        <button
-            type="button"
-            onclick="addItem()"
-        >
-            + Add Item
-        </button>
-
-        <button
-            type="button"
-            onclick="calculateTotal()"
-        >
-            Calculate
-        </button>
-
-        <button
-            type="button"
-            onclick="printBill()"
-        >
-            Print Bill
-        </button>
-
-        <button
-            type="button"
-            class="save-bill-btn"
-            onclick="saveBill()"
-        >
-            Save Bill
-        </button>
-
-        <button
-            type="button"
-            class="danger"
-            onclick="goBack()"
-        >
-            Back
-        </button>
-
-    </div>
-
-
-    <!-- PAYMENT METHOD -->
-    <div class="payment-method-section">
-
-        <label for="paymentMethod">
-            Payment Method:
-        </label>
-
-        <select id="paymentMethod">
-
-            <option value="cash">
-                Cash
-            </option>
-
-            <option value="upi">
-                UPI
-            </option>
-
-            <option value="card">
-                Card
-            </option>
-
-            <option value="credit">
-                Credit
-            </option>
-
-        </select>
-
-    </div>
-
-
-    <!-- SUMMARY -->
-    <div class="summary-area">
-
-        <table class="summary">
-
-            <tr>
-
-                <td>
-                    Subtotal
-                </td>
-
-                <td></td>
-
-                <td>
-                    ₹<span id="subtotal">0.00</span>
-                </td>
-
-            </tr>
-
-
-            <tr>
-
-                <td>
-                    CGST (%)
-                </td>
-
-                <td>
-
-                    <input
-                        type="number"
-                        id="cgstRate"
-                        value="0"
-                        min="0"
-                        step="0.01"
-                        oninput="calculateTotal()"
-                    >
-
-                </td>
-
-                <td>
-                    ₹<span id="cgstAmount">0.00</span>
-                </td>
-
-            </tr>
-
-
-            <tr>
-
-                <td>
-                    SGST (%)
-                </td>
-
-                <td>
-
-                    <input
-                        type="number"
-                        id="sgstRate"
-                        value="0"
-                        min="0"
-                        step="0.01"
-                        oninput="calculateTotal()"
-                    >
-
-                </td>
-
-                <td>
-                    ₹<span id="sgstAmount">0.00</span>
-                </td>
-
-            </tr>
-
-
-            <tr>
-
-                <td>
-                    IGST (%)
-                </td>
-
-                <td>
-
-                    <input
-                        type="number"
-                        id="igstRate"
-                        value="0"
-                        min="0"
-                        step="0.01"
-                        oninput="calculateTotal()"
-                    >
-
-                </td>
-
-                <td>
-                    ₹<span id="igstAmount">0.00</span>
-                </td>
-
-            </tr>
-
-
-            <tr class="grand-total">
-
-                <td>
-                    Grand Total
-                </td>
-
-                <td></td>
-
-                <td>
-                    ₹<span id="grandTotal">0.00</span>
-                </td>
-
-            </tr>
-
-        </table>
-
-    </div>
-
-
-    <!-- PAYMENT + BANK -->
-    <div class="lower-section">
-
-        <!-- UPI QR -->
-        <div class="payment-section">
-
-            <h3>
-                Scan & Pay (UPI)
-            </h3>
-
-            <div id="qrcode"></div>
-
-            <div class="upi-id">
-
-                UPI ID:
-                <span id="upiId">
-                    yourupi@upi
-                </span>
-
-            </div>
+            <button
+                type="button"
+                class="add-btn"
+                onclick="addItem()"
+            >
+                + Add Item
+            </button>
 
         </div>
 
 
-        <!-- BANK DETAILS -->
-        <div class="bank-section">
+        <div class="table-wrapper">
 
-            <h3>
-                Bank Details
-            </h3>
+            <table>
 
-            <table class="bank-table">
+                <thead>
 
-                <tr>
+                    <tr>
+                        <th>Product</th>
+                        <th width="100">Qty</th>
+                        <th width="150">Price</th>
+                        <th width="150">Amount</th>
+                        <th width="70"></th>
+                    </tr>
 
-                    <td>
-                        Account Name
-                    </td>
+                </thead>
 
-                    <td id="accountName">
-                        -
-                    </td>
-
-                </tr>
-
-                <tr>
-
-                    <td>
-                        Account Number
-                    </td>
-
-                    <td id="accountNumber">
-                        -
-                    </td>
-
-                </tr>
-
-                <tr>
-
-                    <td>
-                        Bank Name
-                    </td>
-
-                    <td id="bankName">
-                        -
-                    </td>
-
-                </tr>
-
-                <tr>
-
-                    <td>
-                        IFSC Code
-                    </td>
-
-                    <td id="ifscCode">
-                        -
-                    </td>
-
-                </tr>
+                <tbody id="itemsBody"></tbody>
 
             </table>
 
         </div>
 
+    </section>
+
+
+    <!-- =====================================
+         TAX + PAYMENT
+    ====================================== -->
+
+    <div class="bottom-grid">
+
+
+        <!-- TAX -->
+
+        <section class="card">
+
+            <h2>Tax & Discount</h2>
+
+            <div class="form-group">
+
+                <label for="discount">
+                    Discount
+                </label>
+
+                <div class="input-suffix">
+
+                    <input
+                        type="number"
+                        id="discount"
+                        min="0"
+                        max="100"
+                        step="0.01"
+                        value="0"
+                    >
+
+                    <span>%</span>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="gstType">
+                    GST Type
+                </label>
+
+                <select id="gstType">
+
+                    <option value="local">
+                        Local GST — CGST + SGST
+                    </option>
+
+                    <option value="interstate">
+                        Interstate GST — IGST
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="gstRate">
+                    GST Rate
+                </label>
+
+                <div class="input-suffix">
+
+                    <input
+                        type="number"
+                        id="gstRate"
+                        min="0"
+                        step="0.01"
+                        value="18"
+                    >
+
+                    <span>%</span>
+
+                </div>
+
+            </div>
+
+
+            <div class="tax-summary">
+
+                <div>
+                    <span>Discount Amount</span>
+                    <strong id="discountAmount">
+                        ₹0.00
+                    </strong>
+                </div>
+
+
+                <div>
+                    <span>Taxable Amount</span>
+                    <strong id="taxableAmount">
+                        ₹0.00
+                    </strong>
+                </div>
+
+
+                <div id="cgstRow">
+
+                    <span>
+                        CGST
+                        <small id="cgstRateLabel">9%</small>
+                    </span>
+
+                    <strong id="cgstAmount">
+                        ₹0.00
+                    </strong>
+
+                </div>
+
+
+                <div id="sgstRow">
+
+                    <span>
+                        SGST
+                        <small id="sgstRateLabel">9%</small>
+                    </span>
+
+                    <strong id="sgstAmount">
+                        ₹0.00
+                    </strong>
+
+                </div>
+
+
+                <div id="igstRow" class="hidden">
+
+                    <span>
+                        IGST
+                        <small id="igstRateLabel">18%</small>
+                    </span>
+
+                    <strong id="igstAmount">
+                        ₹0.00
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- PAYMENT -->
+
+        <section class="card">
+
+            <h2>Payment</h2>
+
+
+            <div class="form-group">
+
+                <label for="paymentMethod">
+                    Payment Method
+                </label>
+
+                <select id="paymentMethod">
+
+                    <option value="cash">
+                        Cash
+                    </option>
+
+                    <option value="upi">
+                        UPI
+                    </option>
+
+                    <option value="card">
+                        Card
+                    </option>
+
+                    <option value="credit">
+                        Credit
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- UPI QR -->
+
+            <div
+                id="upiSection"
+                class="upi-section hidden"
+            >
+
+                <h3>Scan to Pay</h3>
+
+                <p>
+                    Customer can scan this QR code
+                    to make payment.
+                </p>
+
+                <div id="qrcode"></div>
+
+                <p
+                    id="upiIdDisplay"
+                    class="upi-id"
+                ></p>
+
+            </div>
+
+        </section>
+
     </div>
 
 
-    <!-- FOOTER -->
-    <div class="footer-section">
+    <!-- =====================================
+         TOTAL
+    ====================================== -->
+
+    <section class="total-card">
 
         <div>
 
-            Total Amount in Words:
+            <span>Subtotal</span>
 
-            <span id="amountWords">
-                Rupees Only
-            </span>
+            <strong id="subtotal">
+                ₹0.00
+            </strong>
 
         </div>
 
 
         <div>
-            Authorized Signature
+
+            <span>Total GST</span>
+
+            <strong id="totalGst">
+                ₹0.00
+            </strong>
+
         </div>
 
-    </div>
+
+        <div class="grand-total">
+
+            <span>Grand Total</span>
+
+            <strong id="grandTotal">
+                ₹0.00
+            </strong>
+
+        </div>
+
+    </section>
 
 
-    <div class="thank-you">
-        🙏 Thank You Visit Once Again 🙏
+    <!-- =====================================
+         ACTIONS
+    ====================================== -->
+
+    <div class="actions">
+
+        <button
+            class="save-btn"
+            onclick="saveBill()"
+        >
+            ✓ Save Bill
+        </button>
+
+
+        <button
+            class="print-btn"
+            onclick="printBill()"
+        >
+            🖨 Print Bill
+        </button>
+
     </div>
 
 
     <p id="message"></p>
 
+</main>
+
+
+<!-- =====================================
+     PRINT BILL
+====================================== -->
+
+<div id="printBill" class="print-bill">
+
+    <div class="invoice-header">
+
+        <h1 id="printShopName"></h1>
+
+        <p id="printShopAddress"></p>
+
+        <p id="printShopPhone"></p>
+
+        <p id="printShopGST"></p>
+
+        <hr>
+
+        <h2>TAX INVOICE</h2>
+
+    </div>
+
+
+    <div class="invoice-info">
+
+        <div>
+            <strong>Customer:</strong>
+            <span id="printCustomer"></span>
+        </div>
+
+        <div>
+            <strong>Phone:</strong>
+            <span id="printCustomerPhone"></span>
+        </div>
+
+        <div>
+            <strong>Date:</strong>
+            <span id="printDate"></span>
+        </div>
+
+    </div>
+
+
+    <table>
+
+        <thead>
+
+            <tr>
+                <th>#</th>
+                <th>Product</th>
+                <th>Qty</th>
+                <th>Price</th>
+                <th>Amount</th>
+            </tr>
+
+        </thead>
+
+        <tbody id="printItems"></tbody>
+
+    </table>
+
+
+    <div class="invoice-totals">
+
+        <p>
+            Subtotal:
+            <strong id="printSubtotal"></strong>
+        </p>
+
+        <p>
+            Discount:
+            <strong id="printDiscount"></strong>
+        </p>
+
+        <p>
+            CGST:
+            <strong id="printCgst"></strong>
+        </p>
+
+        <p>
+            SGST:
+            <strong id="printSgst"></strong>
+        </p>
+
+        <p>
+            IGST:
+            <strong id="printIgst"></strong>
+        </p>
+
+        <h2>
+            Total:
+            <strong id="printTotal"></strong>
+        </h2>
+
+        <p>
+            Payment:
+            <strong id="printPayment"></strong>
+        </p>
+
+    </div>
+
+
+    <div class="invoice-footer">
+
+        <p>Thank you for your business!</p>
+
+    </div>
+
 </div>
 
 
-<!-- QR CODE LIBRARY -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
-<!-- BILLING JS -->
 <script src="billing.js"></script>
 
 </body>
-
 </html>

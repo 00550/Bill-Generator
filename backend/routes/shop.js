@@ -1,4 +1,5 @@
 const express = require("express");
+
 const Shop = require("../models/Shop");
 
 const {
@@ -9,10 +10,10 @@ const {
 const router = express.Router();
 
 
-// ========================================
+// =====================================================
 // ADD NEW SHOP
 // POST /api/shop
-// ========================================
+// =====================================================
 
 router.post("/", protect, ownerOnly, async (req, res) => {
 
@@ -23,37 +24,103 @@ router.post("/", protect, ownerOnly, async (req, res) => {
             shopAddress,
             phone,
             email,
-            gstNumber
+            gstNumber,
+
+            accountName,
+            accountNumber,
+            bankName,
+            ifscCode,
+
+            upiId
+
         } = req.body;
 
 
-        // Validate required fields
+        // ==============================================
+        // VALIDATION
+        // ==============================================
+
         if (!shopName || !shopAddress) {
 
             return res.status(400).json({
-                message: "Shop name and address are required"
+
+                message:
+                    "Shop name and address are required"
+
             });
 
         }
 
 
-        // Create shop
-        const shop = await Shop.create({
+        // ==============================================
+        // CREATE SHOP
+        // ==============================================
 
-            owner: req.user._id,
+        const shop =
+            await Shop.create({
 
-            shopName,
-            shopAddress,
-            phone,
-            email,
-            gstNumber
+                owner:
+                    req.user._id,
 
-        });
+                shopName:
+                    shopName.trim(),
+
+                shopAddress:
+                    shopAddress.trim(),
+
+                phone:
+                    phone ? phone.trim() : "",
+
+                email:
+                    email ? email.trim() : "",
+
+                gstNumber:
+                    gstNumber
+                        ? gstNumber.trim()
+                        : "",
 
 
-        res.status(201).json({
+                // BANK DETAILS
 
-            message: "Shop created successfully",
+                accountName:
+                    accountName
+                        ? accountName.trim()
+                        : "",
+
+                accountNumber:
+                    accountNumber
+                        ? accountNumber.trim()
+                        : "",
+
+                bankName:
+                    bankName
+                        ? bankName.trim()
+                        : "",
+
+                ifscCode:
+                    ifscCode
+                        ? ifscCode.trim().toUpperCase()
+                        : "",
+
+
+                // UPI
+
+                upiId:
+                    upiId
+                        ? upiId.trim()
+                        : ""
+
+            });
+
+
+        // ==============================================
+        // RESPONSE
+        // ==============================================
+
+        return res.status(201).json({
+
+            message:
+                "Shop created successfully",
 
             shop
 
@@ -62,13 +129,19 @@ router.post("/", protect, ownerOnly, async (req, res) => {
 
     } catch (error) {
 
-        console.error("Create shop error:", error);
+        console.error(
+            "Create shop error:",
+            error
+        );
 
-        res.status(500).json({
 
-            message: "Failed to create shop",
+        return res.status(500).json({
 
-            error: error.message
+            message:
+                "Failed to create shop",
+
+            error:
+                error.message
 
         });
 
@@ -77,29 +150,32 @@ router.post("/", protect, ownerOnly, async (req, res) => {
 });
 
 
-// ========================================
-// GET ALL SHOPS OF LOGGED-IN OWNER
+// =====================================================
+// GET ALL SHOPS
 // GET /api/shop
-// ========================================
+// =====================================================
 
 router.get("/", protect, ownerOnly, async (req, res) => {
 
     try {
 
-        const shops = await Shop.find({
+        const shops =
+            await Shop.find({
 
-            owner: req.user._id
+                owner:
+                    req.user._id
 
-        }).sort({
+            }).sort({
 
-            createdAt: -1
+                createdAt: -1
 
-        });
+            });
 
 
-        res.json({
+        return res.json({
 
-            count: shops.length,
+            count:
+                shops.length,
 
             shops
 
@@ -108,13 +184,19 @@ router.get("/", protect, ownerOnly, async (req, res) => {
 
     } catch (error) {
 
-        console.error("Get shops error:", error);
+        console.error(
+            "Get shops error:",
+            error
+        );
 
-        res.status(500).json({
 
-            message: "Failed to fetch shops",
+        return res.status(500).json({
 
-            error: error.message
+            message:
+                "Failed to fetch shops",
+
+            error:
+                error.message
 
         });
 
@@ -123,36 +205,40 @@ router.get("/", protect, ownerOnly, async (req, res) => {
 });
 
 
-// ========================================
+// =====================================================
 // GET SINGLE SHOP
 // GET /api/shop/:id
-// ========================================
+// =====================================================
 
 router.get("/:id", protect, ownerOnly, async (req, res) => {
 
     try {
 
-        const shop = await Shop.findOne({
+        const shop =
+            await Shop.findOne({
 
-            _id: req.params.id,
+                _id:
+                    req.params.id,
 
-            owner: req.user._id
+                owner:
+                    req.user._id
 
-        });
+            });
 
 
         if (!shop) {
 
             return res.status(404).json({
 
-                message: "Shop not found"
+                message:
+                    "Shop not found"
 
             });
 
         }
 
 
-        res.json({
+        return res.json({
 
             shop
 
@@ -161,13 +247,19 @@ router.get("/:id", protect, ownerOnly, async (req, res) => {
 
     } catch (error) {
 
-        console.error("Get single shop error:", error);
+        console.error(
+            "Get single shop error:",
+            error
+        );
 
-        res.status(500).json({
 
-            message: "Failed to fetch shop",
+        return res.status(500).json({
 
-            error: error.message
+            message:
+                "Failed to fetch shop",
+
+            error:
+                error.message
 
         });
 
@@ -176,10 +268,10 @@ router.get("/:id", protect, ownerOnly, async (req, res) => {
 });
 
 
-// ========================================
+// =====================================================
 // UPDATE SHOP
 // PUT /api/shop/:id
-// ========================================
+// =====================================================
 
 router.put("/:id", protect, ownerOnly, async (req, res) => {
 
@@ -191,63 +283,160 @@ router.put("/:id", protect, ownerOnly, async (req, res) => {
             phone,
             email,
             gstNumber,
+
+            accountName,
+            accountNumber,
+            bankName,
+            ifscCode,
+
+            upiId,
+
             status
+
         } = req.body;
 
 
-        // Find only the logged-in owner's shop
-        const shop = await Shop.findOne({
+        const shop =
+            await Shop.findOne({
 
-            _id: req.params.id,
+                _id:
+                    req.params.id,
 
-            owner: req.user._id
+                owner:
+                    req.user._id
 
-        });
+            });
 
 
         if (!shop) {
 
             return res.status(404).json({
 
-                message: "Shop not found"
+                message:
+                    "Shop not found"
 
             });
 
         }
 
 
-        // Update fields only when provided
+        // ==============================================
+        // UPDATE SHOP INFORMATION
+        // ==============================================
+
         if (shopName !== undefined) {
-            shop.shopName = shopName;
+
+            shop.shopName =
+                shopName;
+
         }
+
 
         if (shopAddress !== undefined) {
-            shop.shopAddress = shopAddress;
+
+            shop.shopAddress =
+                shopAddress;
+
         }
+
 
         if (phone !== undefined) {
-            shop.phone = phone;
+
+            shop.phone =
+                phone;
+
         }
+
 
         if (email !== undefined) {
-            shop.email = email;
+
+            shop.email =
+                email;
+
         }
+
 
         if (gstNumber !== undefined) {
-            shop.gstNumber = gstNumber;
+
+            shop.gstNumber =
+                gstNumber;
+
         }
+
+
+        // ==============================================
+        // UPDATE BANK DETAILS
+        // ==============================================
+
+        if (accountName !== undefined) {
+
+            shop.accountName =
+                accountName;
+
+        }
+
+
+        if (accountNumber !== undefined) {
+
+            shop.accountNumber =
+                accountNumber;
+
+        }
+
+
+        if (bankName !== undefined) {
+
+            shop.bankName =
+                bankName;
+
+        }
+
+
+        if (ifscCode !== undefined) {
+
+            shop.ifscCode =
+                ifscCode;
+
+        }
+
+
+        // ==============================================
+        // UPDATE UPI
+        // ==============================================
+
+        if (upiId !== undefined) {
+
+            shop.upiId =
+                upiId;
+
+        }
+
+
+        // ==============================================
+        // UPDATE STATUS
+        // ==============================================
 
         if (status !== undefined) {
-            shop.status = status;
+
+            shop.status =
+                status;
+
         }
 
 
-        // Validate required fields
-        if (!shop.shopName || !shop.shopAddress) {
+        // ==============================================
+        // VALIDATE
+        // ==============================================
+
+        if (
+            !shop.shopName ||
+            !shop.shopAddress
+        ) {
 
             return res.status(400).json({
 
-                message: "Shop name and address are required"
+                message:
+                    "Shop name and address are required"
 
             });
 
@@ -257,9 +446,10 @@ router.put("/:id", protect, ownerOnly, async (req, res) => {
         await shop.save();
 
 
-        res.json({
+        return res.json({
 
-            message: "Shop updated successfully",
+            message:
+                "Shop updated successfully",
 
             shop
 
@@ -268,13 +458,19 @@ router.put("/:id", protect, ownerOnly, async (req, res) => {
 
     } catch (error) {
 
-        console.error("Update shop error:", error);
+        console.error(
+            "Update shop error:",
+            error
+        );
 
-        res.status(500).json({
 
-            message: "Failed to update shop",
+        return res.status(500).json({
 
-            error: error.message
+            message:
+                "Failed to update shop",
+
+            error:
+                error.message
 
         });
 
@@ -283,54 +479,67 @@ router.put("/:id", protect, ownerOnly, async (req, res) => {
 });
 
 
-// ========================================
+// =====================================================
 // DELETE SHOP
 // DELETE /api/shop/:id
-// ========================================
+// =====================================================
 
 router.delete("/:id", protect, ownerOnly, async (req, res) => {
 
     try {
 
-        const shop = await Shop.findOne({
+        const shop =
+            await Shop.findOne({
 
-            _id: req.params.id,
+                _id:
+                    req.params.id,
 
-            owner: req.user._id
+                owner:
+                    req.user._id
 
-        });
+            });
 
 
         if (!shop) {
 
             return res.status(404).json({
 
-                message: "Shop not found"
+                message:
+                    "Shop not found"
 
             });
 
         }
 
 
-        await Shop.findByIdAndDelete(req.params.id);
+        await Shop.findByIdAndDelete(
+            req.params.id
+        );
 
 
-        res.json({
+        return res.json({
 
-            message: "Shop deleted successfully"
+            message:
+                "Shop deleted successfully"
 
         });
 
 
     } catch (error) {
 
-        console.error("Delete shop error:", error);
+        console.error(
+            "Delete shop error:",
+            error
+        );
 
-        res.status(500).json({
 
-            message: "Failed to delete shop",
+        return res.status(500).json({
 
-            error: error.message
+            message:
+                "Failed to delete shop",
+
+            error:
+                error.message
 
         });
 

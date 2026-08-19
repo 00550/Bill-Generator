@@ -1,133 +1,166 @@
-const token = localStorage.getItem("token");
-const shopId = localStorage.getItem("editShopId");
+// ==================================================
+// BILLING DESK - ADD SHOP
+// ==================================================
 
-// ========================================
+console.log("ADD SHOP JS LOADED");
+
+
+// ==================================================
+// GET TOKEN
+// ==================================================
+
+const token = localStorage.getItem("token");
+
+
+// ==================================================
 // CHECK LOGIN
-// ========================================
+// ==================================================
 
 if (!token) {
+
+    alert("Please login first.");
+
     window.location.href = "login.html";
+
 }
 
 
-// ========================================
-// CHECK SHOP ID
-// ========================================
+// ==================================================
+// GET MESSAGE ELEMENT
+// ==================================================
 
-if (!shopId) {
-    alert("No shop selected.");
-    window.location.href = "shops.html";
-}
+const message =
+    document.getElementById("message");
 
 
-// ========================================
-// LOAD SHOP
-// ========================================
+// ==================================================
+// SAVE SHOP
+// ==================================================
 
-async function loadShop() {
+async function saveShop() {
 
-    try {
+    // ==============================================
+    // GET FORM VALUES
+    // ==============================================
 
-        const response = await fetch(
-            `http://localhost:5000/api/shop/${shopId}`,
-            {
-                method: "GET",
+    const shopName =
+        document.getElementById("shopName").value.trim();
 
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
-            }
+    const shopAddress =
+        document.getElementById("shopAddress").value.trim();
+
+    const phone =
+        document.getElementById("phone").value.trim();
+
+    const email =
+        document.getElementById("email").value.trim();
+
+    const gstNumber =
+        document.getElementById("gstNumber").value.trim();
+
+
+    // ==============================================
+    // BANK DETAILS
+    // ==============================================
+
+    const accountName =
+        document.getElementById("accountName").value.trim();
+
+    const accountNumber =
+        document.getElementById("accountNumber").value.trim();
+
+    const bankName =
+        document.getElementById("bankName").value.trim();
+
+    const ifscCode =
+        document.getElementById("ifscCode").value.trim();
+
+
+    // ==============================================
+    // UPI
+    // ==============================================
+
+    const upiId =
+        document.getElementById("upiId").value.trim();
+
+
+    // ==============================================
+    // VALIDATION
+    // ==============================================
+
+    if (!shopName) {
+
+        showMessage(
+            "Please enter shop name.",
+            "error"
         );
 
-        const data = await response.json();
+        document.getElementById("shopName").focus();
 
-        if (!response.ok) {
-
-            document.getElementById("message").textContent =
-                data.message || "Failed to load shop";
-
-            return;
-        }
+        return;
+    }
 
 
-        const shop = data.shop;
+    if (!shopAddress) {
+
+        showMessage(
+            "Please enter shop address.",
+            "error"
+        );
+
+        document.getElementById("shopAddress").focus();
+
+        return;
+    }
 
 
-        document.getElementById("shopName").value =
-            shop.shopName || "";
+    // ==============================================
+    // SHOW LOADING
+    // ==============================================
 
-        document.getElementById("shopAddress").value =
-            shop.shopAddress || "";
-
-        document.getElementById("phone").value =
-            shop.phone || "";
-
-        document.getElementById("email").value =
-            shop.email || "";
-
-        document.getElementById("gstNumber").value =
-            shop.gstNumber || "";
-
-        document.getElementById("status").value =
-            shop.status || "active";
+    showMessage(
+        "Creating shop...",
+        "success"
+    );
 
 
-    } catch (error) {
+    // ==============================================
+    // DISABLE BUTTON
+    // ==============================================
 
-        console.error(error);
+    const saveButton =
+        document.querySelector(".save");
 
-        document.getElementById("message").textContent =
-            "Unable to connect to server.";
+    if (saveButton) {
+
+        saveButton.disabled = true;
+
+        saveButton.textContent =
+            "Saving...";
 
     }
 
-}
+
+    // ==============================================
+    // SEND REQUEST
+    // ==============================================
+
+    try {
+
+        console.log("Sending shop creation request...");
+
+        console.log(
+            "URL:",
+            "http://localhost:5000/api/shop"
+        );
 
 
-// ========================================
-// UPDATE SHOP
-// ========================================
-
-document
-    .getElementById("editShopForm")
-    .addEventListener("submit", async function (event) {
-
-        event.preventDefault();
-
-
-        const message =
-            document.getElementById("message");
-
-
-        const shopName =
-            document.getElementById("shopName").value.trim();
-
-        const shopAddress =
-            document.getElementById("shopAddress").value.trim();
-
-        const phone =
-            document.getElementById("phone").value.trim();
-
-        const email =
-            document.getElementById("email").value.trim();
-
-        const gstNumber =
-            document.getElementById("gstNumber").value.trim();
-
-        const status =
-            document.getElementById("status").value;
-
-
-        message.textContent = "Updating shop...";
-
-
-        try {
-
-            const response = await fetch(
-                `http://localhost:5000/api/shop/${shopId}`,
+        const response =
+            await fetch(
+                "http://localhost:5000/api/shop",
                 {
 
-                    method: "PUT",
+                    method: "POST",
 
                     headers: {
 
@@ -139,78 +172,226 @@ document
 
                     },
 
-                    body: JSON.stringify({
+                    body:
+                        JSON.stringify({
 
-                        shopName,
-                        shopAddress,
-                        phone,
-                        email,
-                        gstNumber,
-                        status
+                            shopName:
+                                shopName,
 
-                    })
+                            shopAddress:
+                                shopAddress,
+
+                            phone:
+                                phone,
+
+                            email:
+                                email,
+
+                            gstNumber:
+                                gstNumber,
+
+                            accountName:
+                                accountName,
+
+                            accountNumber:
+                                accountNumber,
+
+                            bankName:
+                                bankName,
+
+                            ifscCode:
+                                ifscCode,
+
+                            upiId:
+                                upiId
+
+                        })
 
                 }
             );
 
 
-            const data =
+        // ==========================================
+        // READ RESPONSE
+        // ==========================================
+
+        const contentType =
+            response.headers.get(
+                "content-type"
+            ) || "";
+
+
+        let data;
+
+
+        if (
+            contentType.includes(
+                "application/json"
+            )
+        ) {
+
+            data =
                 await response.json();
 
+        } else {
 
-            if (!response.ok) {
+            const text =
+                await response.text();
 
-                message.textContent =
-                    data.message ||
-                    "Failed to update shop";
+            console.error(
+                "Server returned non-JSON:",
+                text
+            );
 
-                return;
+            throw new Error(
+                `Server returned unexpected response. Status: ${response.status}`
+            );
 
-            }
-
-
-            message.textContent =
-                "Shop updated successfully!";
+        }
 
 
-            setTimeout(() => {
+        // ==========================================
+        // SERVER ERROR
+        // ==========================================
 
-                localStorage.removeItem("editShopId");
+        if (!response.ok) {
+
+            throw new Error(
+                data.message ||
+                "Failed to create shop."
+            );
+
+        }
+
+
+        // ==========================================
+        // SUCCESS
+        // ==========================================
+
+        console.log(
+            "Shop created successfully:",
+            data
+        );
+
+
+        showMessage(
+            data.message ||
+            "Shop created successfully!",
+            "success"
+        );
+
+
+        // ==========================================
+        // CLEAR FORM
+        // ==========================================
+
+        document.getElementById("shopName").value = "";
+
+        document.getElementById("shopAddress").value = "";
+
+        document.getElementById("phone").value = "";
+
+        document.getElementById("email").value = "";
+
+        document.getElementById("gstNumber").value = "";
+
+        document.getElementById("accountName").value = "";
+
+        document.getElementById("accountNumber").value = "";
+
+        document.getElementById("bankName").value = "";
+
+        document.getElementById("ifscCode").value = "";
+
+        document.getElementById("upiId").value = "";
+
+
+        // ==========================================
+        // REDIRECT
+        // ==========================================
+
+        setTimeout(
+            function () {
 
                 window.location.href =
                     "shops.html";
 
-            }, 1000);
+            },
+            1200
+        );
 
 
-        } catch (error) {
+    } catch (error) {
 
-            console.error(error);
+        console.error(
+            "Create shop error:",
+            error
+        );
 
-            message.textContent =
-                "Unable to connect to server.";
+
+        showMessage(
+            error.message ||
+            "Unable to connect to server.",
+            "error"
+        );
+
+
+        // ==========================================
+        // ENABLE BUTTON
+        // ==========================================
+
+        if (saveButton) {
+
+            saveButton.disabled =
+                false;
+
+            saveButton.textContent =
+                "Save Shop";
 
         }
 
-    });
+    }
+
+}
 
 
-// ========================================
-// CANCEL
-// ========================================
+// ==================================================
+// SHOW MESSAGE
+// ==================================================
+
+function showMessage(text, type) {
+
+    if (!message) {
+        return;
+    }
+
+
+    message.textContent =
+        text;
+
+
+    if (type === "error") {
+
+        message.style.color =
+            "#dc2626";
+
+    } else {
+
+        message.style.color =
+            "#16a34a";
+
+    }
+
+}
+
+
+// ==================================================
+// GO BACK
+// ==================================================
 
 function goBack() {
-
-    localStorage.removeItem("editShopId");
 
     window.location.href =
         "shops.html";
 
 }
-
-
-// ========================================
-// LOAD SHOP WHEN PAGE OPENS
-// ========================================
-
-loadShop();
